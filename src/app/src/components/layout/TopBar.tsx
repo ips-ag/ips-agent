@@ -1,0 +1,39 @@
+import { AppBar, Toolbar, IconButton, Typography, Box, Avatar, Menu, MenuItem } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+interface TopBarProps {
+  drawerWidth: number;
+  onMenuToggle: () => void;
+}
+
+export default function TopBar({ drawerWidth, onMenuToggle }: TopBarProps) {
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  return (
+    <AppBar
+      position="fixed"
+      sx={{ width: { sm: `calc(100% - ${drawerWidth}px)` }, ml: { sm: `${drawerWidth}px` } }}
+    >
+      <Toolbar>
+        <IconButton color="inherit" edge="start" onClick={onMenuToggle} sx={{ mr: 2, display: { sm: 'none' } }}>
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
+          Fake Intra
+        </Typography>
+        <Box>
+          <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+            <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>U</Avatar>
+          </IconButton>
+          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+            <MenuItem onClick={() => { setAnchorEl(null); navigate('/profile'); }}>Profile</MenuItem>
+            <MenuItem onClick={() => setAnchorEl(null)}>Sign Out</MenuItem>
+          </Menu>
+        </Box>
+      </Toolbar>
+    </AppBar>
+  );
+}
