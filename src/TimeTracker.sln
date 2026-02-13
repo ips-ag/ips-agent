@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTracker.Tests", "tests\TimeTracker.Tests\TimeTracker.Tests.csproj", "{414D273F-AF2A-4B41-94BE-CF6F04E11BF0}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "TimeTracker.App", "app\TimeTracker.App.esproj", "{A7B8E9F0-1234-5678-9ABC-DEF012345678}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,18 @@ Global
 		{414D273F-AF2A-4B41-94BE-CF6F04E11BF0}.Release|x64.Build.0 = Release|Any CPU
 		{414D273F-AF2A-4B41-94BE-CF6F04E11BF0}.Release|x86.ActiveCfg = Release|Any CPU
 		{414D273F-AF2A-4B41-94BE-CF6F04E11BF0}.Release|x86.Build.0 = Release|Any CPU
+		{A7B8E9F0-1234-5678-9ABC-DEF012345678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7B8E9F0-1234-5678-9ABC-DEF012345678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7B8E9F0-1234-5678-9ABC-DEF012345678}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A7B8E9F0-1234-5678-9ABC-DEF012345678}.Debug|x64.Build.0 = Debug|Any CPU
+		{A7B8E9F0-1234-5678-9ABC-DEF012345678}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A7B8E9F0-1234-5678-9ABC-DEF012345678}.Debug|x86.Build.0 = Debug|Any CPU
+		{A7B8E9F0-1234-5678-9ABC-DEF012345678}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7B8E9F0-1234-5678-9ABC-DEF012345678}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7B8E9F0-1234-5678-9ABC-DEF012345678}.Release|x64.ActiveCfg = Release|Any CPU
+		{A7B8E9F0-1234-5678-9ABC-DEF012345678}.Release|x64.Build.0 = Release|Any CPU
+		{A7B8E9F0-1234-5678-9ABC-DEF012345678}.Release|x86.ActiveCfg = Release|Any CPU
+		{A7B8E9F0-1234-5678-9ABC-DEF012345678}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
