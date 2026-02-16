@@ -8,5 +8,5 @@ public record CreateProjectCommand(
     string Name,
     string Code,
     string? Description,
-    DateOnly StartDate,
+    DateOnly? StartDate,
     DateOnly? EndDate) : IRequest<Guid>;

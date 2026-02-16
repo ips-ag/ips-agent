@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   Paper, Table, TableHead, TableRow, TableCell, TableBody,
   TextField, Chip, IconButton, Pagination, Dialog, DialogTitle,
-  DialogContent, DialogActions, Button, Box,
+  DialogContent, DialogActions, Button, Box, Tooltip,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ArchiveIcon from '@mui/icons-material/Archive';
@@ -129,13 +129,17 @@ export default function UnitListPage() {
                     />
                   </TableCell>
                   <TableCell align="right" onClick={(e) => e.stopPropagation()}>
-                    <IconButton size="small" onClick={() => openEdit(unit)}>
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    {unit.isActive && (
-                      <IconButton size="small" onClick={() => setArchiveTarget(unit)}>
-                        <ArchiveIcon fontSize="small" />
+                    <Tooltip title="Edit">
+                      <IconButton size="small" onClick={() => openEdit(unit)}>
+                        <EditIcon fontSize="small" />
                       </IconButton>
+                    </Tooltip>
+                    {unit.isActive && (
+                      <Tooltip title="Archive">
+                        <IconButton size="small" onClick={() => setArchiveTarget(unit)}>
+                          <ArchiveIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
                     )}
                   </TableCell>
                 </TableRow>

@@ -7,4 +7,4 @@ public record CreateTimeEntryCommand(
     Guid TaskId,
     DateOnly Date,
     decimal Hours,
-    string Description) : IRequest<Guid>;
+    string? Description) : IRequest<Guid>;

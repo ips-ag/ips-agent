@@ -3,7 +3,7 @@ import {
   Paper, Table, TableHead, TableRow, TableCell, TableBody,
   TextField, Chip, IconButton, Pagination, Dialog, DialogTitle,
   DialogContent, DialogActions, Button, Box, FormControl, InputLabel,
-  Select, MenuItem,
+  Select, MenuItem, Tooltip,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import BlockIcon from '@mui/icons-material/Block';
@@ -137,13 +137,17 @@ export default function UserListPage() {
                     />
                   </TableCell>
                   <TableCell align="right">
-                    <IconButton size="small" onClick={() => openEdit(user)}>
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    {user.isActive && (
-                      <IconButton size="small" color="error" onClick={() => setDeactivateTarget(user)}>
-                        <BlockIcon fontSize="small" />
+                    <Tooltip title="Edit">
+                      <IconButton size="small" onClick={() => openEdit(user)}>
+                        <EditIcon fontSize="small" />
                       </IconButton>
+                    </Tooltip>
+                    {user.isActive && (
+                      <Tooltip title="Deactivate">
+                        <IconButton size="small" color="error" onClick={() => setDeactivateTarget(user)}>
+                          <BlockIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
                     )}
                   </TableCell>
                 </TableRow>

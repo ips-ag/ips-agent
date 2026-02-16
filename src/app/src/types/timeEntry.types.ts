@@ -7,7 +7,7 @@ export interface TimeEntryDto {
   projectName?: string;
   date: string;
   hours: number;
-  description: string;
+  description?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -23,7 +23,7 @@ export interface UpdateTimeEntryRequest {
   taskId: string;
   date: string;
   hours: number;
-  description: string;
+  description?: string;
 }
 
 export interface TimesheetDto {

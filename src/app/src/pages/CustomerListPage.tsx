@@ -3,7 +3,7 @@ import {
   Paper, Table, TableHead, TableRow, TableCell, TableBody,
   TextField, Chip, IconButton, Pagination, Dialog, DialogTitle,
   DialogContent, DialogActions, Button, Box, FormControl, InputLabel,
-  Select, MenuItem,
+  Select, MenuItem, Tooltip,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ArchiveIcon from '@mui/icons-material/Archive';
@@ -179,13 +179,17 @@ export default function CustomerListPage() {
                     />
                   </TableCell>
                   <TableCell align="right" onClick={(e) => e.stopPropagation()}>
-                    <IconButton size="small" onClick={() => openEdit(customer)}>
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    {customer.isActive && (
-                      <IconButton size="small" onClick={() => setArchiveTarget(customer)}>
-                        <ArchiveIcon fontSize="small" />
+                    <Tooltip title="Edit">
+                      <IconButton size="small" onClick={() => openEdit(customer)}>
+                        <EditIcon fontSize="small" />
                       </IconButton>
+                    </Tooltip>
+                    {customer.isActive && (
+                      <Tooltip title="Archive">
+                        <IconButton size="small" onClick={() => setArchiveTarget(customer)}>
+                          <ArchiveIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
                     )}
                   </TableCell>
                 </TableRow>

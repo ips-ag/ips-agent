@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
   Paper, Table, TableHead, TableRow, TableCell, TableBody,
   TextField, IconButton, Pagination, Box, FormControl, InputLabel,
-  Select, MenuItem,
+  Select, MenuItem, Tooltip,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -115,12 +115,16 @@ export default function TimeEntryListPage() {
                   <TableCell align="right">{entry.hours.toFixed(2)}</TableCell>
                   <TableCell>{entry.description}</TableCell>
                   <TableCell align="right">
-                    <IconButton size="small" onClick={() => navigate(`/time-entries/${entry.id}/edit`)}>
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton size="small" color="error" onClick={() => setDeleteTarget(entry)}>
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
+                    <Tooltip title="Edit">
+                      <IconButton size="small" onClick={() => navigate(`/time-entries/${entry.id}/edit`)}>
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete">
+                      <IconButton size="small" color="error" onClick={() => setDeleteTarget(entry)}>
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               ))}

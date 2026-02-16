@@ -81,7 +81,7 @@ namespace TimeTracker.Infrastructure.Migrations
                     Code = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: true),
-                    StartDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    StartDate = table.Column<DateOnly>(type: "TEXT", nullable: true),
                     EndDate = table.Column<DateOnly>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
@@ -190,7 +190,7 @@ namespace TimeTracker.Infrastructure.Migrations
                     TaskId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Date = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     Hours = table.Column<decimal>(type: "TEXT", precision: 5, scale: 2, nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },

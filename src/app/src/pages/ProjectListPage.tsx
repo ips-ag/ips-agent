@@ -3,7 +3,7 @@ import {
   Paper, Table, TableHead, TableRow, TableCell, TableBody,
   TextField, Chip, IconButton, Pagination, Dialog, DialogTitle,
   DialogContent, DialogActions, Button, Box, FormControl, InputLabel,
-  Select, MenuItem,
+  Select, MenuItem, Tooltip,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ArchiveIcon from '@mui/icons-material/Archive';
@@ -25,7 +25,7 @@ const projectSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   code: z.string().min(1, 'Code is required'),
   description: z.string().optional(),
-  startDate: z.string().min(1, 'Start date is required'),
+  startDate: z.string().optional(),
   endDate: z.string().optional(),
 });
 type ProjectFormData = z.infer<typeof projectSchema>;
@@ -60,7 +60,7 @@ export default function ProjectListPage() {
         name: editing.name,
         code: editing.code,
         description: editing.description ?? '',
-        startDate: editing.startDate.split('T')[0],
+        startDate: editing.startDate?.split('T')[0] ?? '',
         endDate: editing.endDate?.split('T')[0] ?? '',
       });
     } else {
@@ -81,8 +81,8 @@ export default function ProjectListPage() {
           code: formData.code,
           description: formData.description,
           isActive: editing.isActive,
-          startDate: formData.startDate,
-          endDate: formData.endDate,
+          startDate: formData.startDate || undefined,
+          endDate: formData.endDate || undefined,
         },
       });
     } else {
@@ -92,8 +92,8 @@ export default function ProjectListPage() {
         name: formData.name,
         code: formData.code,
         description: formData.description,
-        startDate: formData.startDate,
-        endDate: formData.endDate,
+        startDate: formData.startDate || undefined,
+        endDate: formData.endDate || undefined,
       });
     }
     closeDialog();
@@ -187,13 +187,17 @@ export default function ProjectListPage() {
                     />
                   </TableCell>
                   <TableCell align="right" onClick={(e) => e.stopPropagation()}>
-                    <IconButton size="small" onClick={() => openEdit(project)}>
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    {project.isActive && (
-                      <IconButton size="small" onClick={() => setArchiveTarget(project)}>
-                        <ArchiveIcon fontSize="small" />
+                    <Tooltip title="Edit">
+                      <IconButton size="small" onClick={() => openEdit(project)}>
+                        <EditIcon fontSize="small" />
                       </IconButton>
+                    </Tooltip>
+                    {project.isActive && (
+                      <Tooltip title="Archive">
+                        <IconButton size="small" onClick={() => setArchiveTarget(project)}>
+                          <ArchiveIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
                     )}
                   </TableCell>
                 </TableRow>
@@ -270,8 +274,6 @@ export default function ProjectListPage() {
               label="Start Date"
               type="date"
               {...register('startDate')}
-              error={!!errors.startDate}
-              helperText={errors.startDate?.message}
               InputLabelProps={{ shrink: true }}
               fullWidth
             />

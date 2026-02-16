@@ -14,7 +14,7 @@ public class TimeEntryDto : IMapFrom<TimeEntry>
     public string? ProjectName { get; set; }
     public string Date { get; set; } = string.Empty;
     public decimal Hours { get; set; }
-    public string Description { get; set; } = string.Empty;
+    public string? Description { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 

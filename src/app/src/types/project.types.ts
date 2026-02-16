@@ -7,7 +7,7 @@ export interface ProjectDto {
   code: string;
   description?: string;
   isActive: boolean;
-  startDate: string;
+  startDate?: string;
   endDate?: string;
   createdAt: string;
   updatedAt: string;
@@ -20,7 +20,7 @@ export interface CreateProjectRequest {
   name: string;
   code: string;
   description?: string;
-  startDate: string;
+  startDate?: string;
   endDate?: string;
 }
 
@@ -29,7 +29,7 @@ export interface UpdateProjectRequest {
   code: string;
   description?: string;
   isActive: boolean;
-  startDate: string;
+  startDate?: string;
   endDate?: string;
 }
 

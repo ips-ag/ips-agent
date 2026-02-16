@@ -10,6 +10,6 @@ public class CreateTimeEntryCommandValidator : AbstractValidator<CreateTimeEntry
         RuleFor(x => x.UserId).NotEmpty();
         RuleFor(x => x.Date).NotEmpty();
         RuleFor(x => x.Hours).InclusiveBetween(0.25m, 24m);
-        RuleFor(x => x.Description).NotEmpty().MaximumLength(500);
+        RuleFor(x => x.Description).MaximumLength(500);
     }
 }

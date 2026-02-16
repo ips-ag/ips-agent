@@ -14,7 +14,6 @@ public class TimeEntryConfiguration : IEntityTypeConfiguration<TimeEntry>
             .HasPrecision(5, 2);
 
         builder.Property(te => te.Description)
-            .IsRequired()
             .HasMaxLength(500);
 
         builder.HasOne(te => te.User)

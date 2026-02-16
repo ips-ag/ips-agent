@@ -7,7 +7,7 @@ public class TimeEntry
     public Guid TaskId { get; init; }
     public DateOnly Date { get; set; }
     public decimal Hours { get; set; }
-    public string Description { get; set; } = string.Empty;
+    public string? Description { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 

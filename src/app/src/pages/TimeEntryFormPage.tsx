@@ -21,7 +21,7 @@ const timeEntrySchema = z.object({
     .number()
     .min(0.25, 'Minimum 0.25 hours')
     .max(24, 'Maximum 24 hours'),
-  description: z.string().min(1, 'Description is required'),
+  description: z.string().optional(),
 });
 type TimeEntryFormData = z.infer<typeof timeEntrySchema>;
 
@@ -65,7 +65,7 @@ export default function TimeEntryFormPage() {
           taskId: data.taskId,
           date: data.date,
           hours: data.hours,
-          description: data.description,
+          description: data.description || undefined,
         },
       });
     } else {
@@ -73,7 +73,7 @@ export default function TimeEntryFormPage() {
         taskId: data.taskId,
         date: data.date,
         hours: data.hours,
-        description: data.description,
+        description: data.description || undefined,
       });
     }
     navigate('/time-entries');
@@ -154,8 +154,6 @@ export default function TimeEntryFormPage() {
             <TextField
               label="Description"
               {...register('description')}
-              error={!!errors.description}
-              helperText={errors.description?.message}
               multiline
               rows={3}
               fullWidth

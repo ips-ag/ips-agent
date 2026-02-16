@@ -3,7 +3,7 @@ import {
   Paper, Table, TableHead, TableRow, TableCell, TableBody,
   Card, CardContent, Typography, Chip, Box, Button, Dialog,
   DialogTitle, DialogContent, DialogActions, TextField, FormControl,
-  InputLabel, Select, MenuItem, IconButton,
+  InputLabel, Select, MenuItem, IconButton, Tooltip,
 } from '@mui/material';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
@@ -131,7 +131,7 @@ export default function ProjectDetailPage() {
                 </Box>
                 <Box>
                   <Typography variant="subtitle2" color="text.secondary">Start Date</Typography>
-                  <Typography>{new Date(project.startDate).toLocaleDateString()}</Typography>
+                  <Typography>{project.startDate ? new Date(project.startDate).toLocaleDateString() : '—'}</Typography>
                 </Box>
                 <Box>
                   <Typography variant="subtitle2" color="text.secondary">End Date</Typography>
@@ -256,13 +256,15 @@ export default function ProjectDetailPage() {
                       <TableCell>{u.email ?? '—'}</TableCell>
                       <TableCell><Chip label={u.role ?? 'Member'} size="small" /></TableCell>
                       <TableCell align="right">
-                        <IconButton
-                          size="small"
-                          color="error"
-                          onClick={() => setRemoveTarget({ userId: u.id ?? u.userId, name: `${u.firstName ?? u.name} ${u.lastName ?? ''}` })}
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
+                        <Tooltip title="Remove user">
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setRemoveTarget({ userId: u.id ?? u.userId, name: `${u.firstName ?? u.name} ${u.lastName ?? ''}` })}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   ))}

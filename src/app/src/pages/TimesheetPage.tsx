@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import {
   Paper, Table, TableHead, TableRow, TableCell, TableBody,
-  Typography, Box, Button, IconButton,
+  Typography, Box, Button, IconButton, Tooltip,
 } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -97,11 +97,15 @@ export default function TimesheetPage() {
       <PageHeader title="Timesheet" />
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-        <IconButton onClick={() => navigateWeek(-1)}><ChevronLeftIcon /></IconButton>
+        <Tooltip title="Previous week">
+          <IconButton onClick={() => navigateWeek(-1)}><ChevronLeftIcon /></IconButton>
+        </Tooltip>
         <Typography variant="h6">
           {weekDates[0]!.toLocaleDateString()} — {weekDates[6]!.toLocaleDateString()}
         </Typography>
-        <IconButton onClick={() => navigateWeek(1)}><ChevronRightIcon /></IconButton>
+        <Tooltip title="Next week">
+          <IconButton onClick={() => navigateWeek(1)}><ChevronRightIcon /></IconButton>
+        </Tooltip>
         <Button size="small" variant="outlined" onClick={goToday}>Today</Button>
       </Box>
 

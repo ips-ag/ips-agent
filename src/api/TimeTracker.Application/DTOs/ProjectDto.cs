@@ -14,7 +14,7 @@ public class ProjectDto : IMapFrom<Project>
     public string Code { get; set; } = string.Empty;
     public string? Description { get; set; }
     public bool IsActive { get; set; }
-    public string StartDate { get; set; } = string.Empty;
+    public string? StartDate { get; set; }
     public string? EndDate { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
@@ -24,7 +24,7 @@ public class ProjectDto : IMapFrom<Project>
     {
         profile.CreateMap<Project, ProjectDto>()
             .ForMember(d => d.CustomerName, opt => opt.MapFrom(s => s.Customer.Name))
-            .ForMember(d => d.StartDate, opt => opt.MapFrom(s => s.StartDate.ToString("yyyy-MM-dd")))
+            .ForMember(d => d.StartDate, opt => opt.MapFrom(s => s.StartDate.HasValue ? s.StartDate.Value.ToString("yyyy-MM-dd") : null))
             .ForMember(d => d.EndDate, opt => opt.MapFrom(s => s.EndDate.HasValue ? s.EndDate.Value.ToString("yyyy-MM-dd") : null));
     }
 }

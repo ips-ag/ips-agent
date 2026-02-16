@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, IconButton, Typography, Box, Avatar, Menu, MenuItem } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Box, Avatar, Menu, MenuItem, Tooltip } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -18,16 +18,20 @@ export default function TopBar({ drawerWidth, onMenuToggle }: TopBarProps) {
       sx={{ width: { sm: `calc(100% - ${drawerWidth}px)` }, ml: { sm: `${drawerWidth}px` } }}
     >
       <Toolbar>
-        <IconButton color="inherit" edge="start" onClick={onMenuToggle} sx={{ mr: 2, display: { sm: 'none' } }}>
-          <MenuIcon />
-        </IconButton>
+        <Tooltip title="Menu">
+          <IconButton color="inherit" edge="start" onClick={onMenuToggle} sx={{ mr: 2, display: { sm: 'none' } }}>
+            <MenuIcon />
+          </IconButton>
+        </Tooltip>
         <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
           Fake Intra
         </Typography>
         <Box>
-          <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-            <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>U</Avatar>
-          </IconButton>
+          <Tooltip title="User menu">
+            <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+              <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>U</Avatar>
+            </IconButton>
+          </Tooltip>
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
             <MenuItem onClick={() => { setAnchorEl(null); navigate('/profile'); }}>Profile</MenuItem>
             <MenuItem onClick={() => setAnchorEl(null)}>Sign Out</MenuItem>

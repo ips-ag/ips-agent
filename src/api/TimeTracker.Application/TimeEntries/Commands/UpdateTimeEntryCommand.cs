@@ -7,4 +7,4 @@ public record UpdateTimeEntryCommand(
     Guid TaskId,
     DateOnly Date,
     decimal Hours,
-    string Description) : IRequest<MediatR.Unit>;
+    string? Description) : IRequest<MediatR.Unit>;

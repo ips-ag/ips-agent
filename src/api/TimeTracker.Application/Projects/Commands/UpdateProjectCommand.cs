@@ -8,5 +8,5 @@ public record UpdateProjectCommand(
     string Code,
     string? Description,
     bool IsActive,
-    DateOnly StartDate,
+    DateOnly? StartDate,
     DateOnly? EndDate) : IRequest<MediatR.Unit>;

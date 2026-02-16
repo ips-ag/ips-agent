@@ -99,7 +99,7 @@ namespace TimeTracker.Infrastructure.Migrations
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateOnly>("StartDate")
+                    b.Property<DateOnly?>("StartDate")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
@@ -215,7 +215,6 @@ namespace TimeTracker.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
