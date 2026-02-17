@@ -33,6 +33,9 @@ param(
 # Set error action preference
 $ErrorActionPreference = "Stop"
 
+# Import required modules
+Import-Module Az.Resources
+
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "Entra ID Application Registration" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
@@ -114,7 +117,8 @@ Write-Host ""
 # Step 6: Configure optional claims
 Write-Host "Step 6: Configuring optional claims..." -ForegroundColor Yellow
 $optionalClaimsJson = Get-Content "optionalClaims.json" -Raw
-az ad app update --id $appObjectId --set "optionalClaims=$optionalClaimsJson"
+$optionalClaims = [Microsoft.Azure.PowerShell.Cmdlets.Resources.MSGraph.Models.ApiV10.MicrosoftGraphOptionalClaims]::FromJsonString($optionalClaimsJson)
+Update-AzADApplication -ObjectId $appObjectId -OptionalClaim $optionalClaims
 Write-Host "Optional claims configured successfully!" -ForegroundColor Green
 Write-Host ""
 
