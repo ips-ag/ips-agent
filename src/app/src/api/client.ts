@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { PublicClientApplication, InteractionRequiredAuthError } from '@azure/msal-browser';
-import { msalConfig, apiScopes } from '../auth/msalConfig';
-
-const msalInstance = new PublicClientApplication(msalConfig);
+import { InteractionRequiredAuthError } from '@azure/msal-browser';
+import { apiScopes } from '../auth/msalConfig';
+import { msalInstance } from '../auth/msalInstance';
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/v1` : '/api/v1',

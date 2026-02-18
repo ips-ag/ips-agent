@@ -80,6 +80,7 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<UserSyncMiddleware>();
 app.MapControllers();
 
 app.Run();
