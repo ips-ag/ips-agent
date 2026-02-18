@@ -1,15 +1,29 @@
 import axios from 'axios';
+import { PublicClientApplication, InteractionRequiredAuthError } from '@azure/msal-browser';
+import { msalConfig, apiScopes } from '../auth/msalConfig';
+
+const msalInstance = new PublicClientApplication(msalConfig);
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/v1` : '/api/v1',
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Request interceptor — attach auth token
-apiClient.interceptors.request.use((config) => {
-  const token = sessionStorage.getItem('access_token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+// Request interceptor — acquire token silently and attach as Bearer header
+apiClient.interceptors.request.use(async (config) => {
+  const accounts = msalInstance.getAllAccounts();
+  if (accounts.length > 0) {
+    try {
+      const response = await msalInstance.acquireTokenSilent({
+        ...apiScopes,
+        account: accounts[0],
+      });
+      config.headers.Authorization = `Bearer ${response.accessToken}`;
+    } catch (error) {
+      if (error instanceof InteractionRequiredAuthError) {
+        await msalInstance.acquireTokenRedirect(apiScopes);
+      }
+    }
   }
   return config;
 });
@@ -17,9 +31,9 @@ apiClient.interceptors.request.use((config) => {
 // Response interceptor — handle errors
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     if (error.response?.status === 401) {
-      // Handle unauthorized
+      await msalInstance.loginRedirect();
     }
     return Promise.reject(error);
   },

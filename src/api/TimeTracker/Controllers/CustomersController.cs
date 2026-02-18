@@ -1,10 +1,12 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.Customers.Commands;
 using TimeTracker.Application.Customers.Queries;
 
 namespace TimeTracker.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class CustomersController : ControllerBase

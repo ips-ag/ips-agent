@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.Assignments.Queries;
 using TimeTracker.Application.Users.Commands;
@@ -6,6 +7,7 @@ using TimeTracker.Application.Users.Queries;
 
 namespace TimeTracker.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/v1/[controller]")]
 public class UsersController : ControllerBase

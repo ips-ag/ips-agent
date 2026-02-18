@@ -1,14 +1,11 @@
 import { Box, Card, CardContent, Typography, Avatar } from '@mui/material';
 import PageHeader from '../components/common/PageHeader';
+import { useAuth } from '../hooks/useAuth';
 
 export default function ProfilePage() {
-  // Placeholder user info — replace with real auth context
-  const user = {
-    name: 'Jane Doe',
-    email: 'jane.doe@fakeintra.dev',
-    role: 'Employee',
-    initials: 'JD',
-  };
+  const { user } = useAuth();
+
+  const initials = `${user?.givenName?.[0] ?? ''}${user?.familyName?.[0] ?? ''}`;
 
   return (
     <>
@@ -17,20 +14,19 @@ export default function ProfilePage() {
         <CardContent>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, mb: 3 }}>
             <Avatar sx={{ width: 72, height: 72, bgcolor: 'primary.main', fontSize: 28 }}>
-              {user.initials}
+              {initials}
             </Avatar>
             <Box>
-              <Typography variant="h5">{user.name}</Typography>
+              <Typography variant="h5">{user?.name}</Typography>
               <Typography variant="body2" color="text.secondary">
-                {user.email}
+                {user?.email}
               </Typography>
             </Box>
           </Box>
-          <Typography variant="subtitle2" color="text.secondary">Role</Typography>
-          <Typography variant="body1" sx={{ mb: 2 }}>{user.role}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            Profile management will be available once authentication is configured.
-          </Typography>
+          <Typography variant="subtitle2" color="text.secondary">First Name</Typography>
+          <Typography variant="body1" sx={{ mb: 1 }}>{user?.givenName}</Typography>
+          <Typography variant="subtitle2" color="text.secondary">Last Name</Typography>
+          <Typography variant="body1" sx={{ mb: 1 }}>{user?.familyName}</Typography>
         </CardContent>
       </Card>
     </>

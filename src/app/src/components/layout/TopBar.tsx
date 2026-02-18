@@ -2,6 +2,7 @@ import { AppBar, Toolbar, IconButton, Typography, Box, Avatar, Menu, MenuItem, T
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 interface TopBarProps {
   drawerWidth: number;
@@ -10,6 +11,7 @@ interface TopBarProps {
 
 export default function TopBar({ drawerWidth, onMenuToggle }: TopBarProps) {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   return (
@@ -29,12 +31,14 @@ export default function TopBar({ drawerWidth, onMenuToggle }: TopBarProps) {
         <Box>
           <Tooltip title="User menu">
             <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-              <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>U</Avatar>
+              <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>
+                {user?.givenName?.[0]}{user?.familyName?.[0]}
+              </Avatar>
             </IconButton>
           </Tooltip>
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
             <MenuItem onClick={() => { setAnchorEl(null); navigate('/profile'); }}>Profile</MenuItem>
-            <MenuItem onClick={() => setAnchorEl(null)}>Sign Out</MenuItem>
+            <MenuItem onClick={() => { setAnchorEl(null); logout(); }}>Sign Out</MenuItem>
           </Menu>
         </Box>
       </Toolbar>

@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import AppShell from './components/layout/AppShell';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 import DashboardPage from './pages/DashboardPage';
 import TimesheetPage from './pages/TimesheetPage';
 import TimeEntryListPage from './pages/TimeEntryListPage';
@@ -20,8 +21,9 @@ import ProfilePage from './pages/ProfilePage';
 
 export default function App() {
   return (
-    <AppShell>
-      <Routes>
+    <ProtectedRoute>
+      <AppShell>
+        <Routes>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/timesheet" element={<TimesheetPage />} />
@@ -44,5 +46,6 @@ export default function App() {
         <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </AppShell>
+    </ProtectedRoute>
   );
 }
