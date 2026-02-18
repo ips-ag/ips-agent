@@ -48,10 +48,12 @@ Write-Host ""
 Write-Host "Getting tenant information..." -ForegroundColor Yellow
 $tenantInfo = az account show | ConvertFrom-Json
 $tenantId = $tenantInfo.tenantId
-$tenantName = $tenantInfo.name
+$tenantName = $tenantInfo.tenantDisplayName
+$userName = $tenantInfo.user.name
 
 Write-Host "Tenant ID: $tenantId" -ForegroundColor Green
 Write-Host "Tenant Name: $tenantName" -ForegroundColor Green
+Write-Host "Username: $userName" -ForegroundColor Green
 Write-Host ""
 
 # Step 1: Check if application exists, create if not
@@ -153,11 +155,6 @@ Write-Host "  Authority:                    https://login.microsoftonline.com/$t
 Write-Host "  Issuer:                       https://login.microsoftonline.com/$tenantId/v2.0" -ForegroundColor White
 Write-Host "  Token Endpoint:               https://login.microsoftonline.com/$tenantId/oauth2/v2.0/token" -ForegroundColor White
 Write-Host "  Authorization Endpoint:       https://login.microsoftonline.com/$tenantId/oauth2/v2.0/authorize" -ForegroundColor White
-Write-Host ""
-
-Write-Host "API Configuration:" -ForegroundColor Cyan
-Write-Host "  API Scope:                    $appIdUri/$ApplicationName" -ForegroundColor White
-Write-Host "  API Scope (Full):             api://$appId/$ApplicationName" -ForegroundColor White
 Write-Host ""
 
 Write-Host "Client Scopes to Request:" -ForegroundColor Cyan
