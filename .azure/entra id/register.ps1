@@ -24,8 +24,8 @@ param(
   [Parameter(Mandatory = $false)]
   [string[]]$RedirectUris = @(
     "http://localhost:5173/",
-    "http://localhost:5000/",
-    "http://localhost:5000/swagger/oauth2-redirect.html",
+    "http://localhost:5108/",
+    "http://localhost:5108/swagger/oauth2-redirect.html",
     "https://app-fakeintra-ui-dev.azurewebsites.net/"
   ),
 
