@@ -1,9 +1,12 @@
 import { Configuration, LogLevel } from '@azure/msal-browser';
 
+const clientId = import.meta.env.VITE_AUTH_CLIENT_ID as string;
+const tenantId = import.meta.env.VITE_AUTH_TENANT_ID as string;
+
 export const msalConfig: Configuration = {
   auth: {
-    clientId: '17e121f3-96fa-43fc-948f-75d9798cead4',
-    authority: 'https://login.microsoftonline.com/dcb58767-2d57-462f-82d5-552df1c47ccb',
+    clientId: clientId,
+    authority: `https://login.microsoftonline.com/${tenantId}`,
     redirectUri: '/',
     postLogoutRedirectUri: '/',
   },
@@ -19,9 +22,9 @@ export const msalConfig: Configuration = {
 };
 
 export const loginRequest = {
-  scopes: ['openid', 'profile', 'email', 'api://17e121f3-96fa-43fc-948f-75d9798cead4/FakeIntra'],
+  scopes: ['openid', 'profile', 'email', `api://${clientId}/FakeIntra`],
 };
 
 export const apiScopes = {
-  scopes: ['api://17e121f3-96fa-43fc-948f-75d9798cead4/FakeIntra'],
+  scopes: [`api://${clientId}/FakeIntra`],
 };
