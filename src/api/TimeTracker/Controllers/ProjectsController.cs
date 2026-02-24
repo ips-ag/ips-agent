@@ -17,19 +17,19 @@ public class ProjectsController : ControllerBase
     public ProjectsController(ISender sender) => _sender = sender;
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] string? search = null, [FromQuery] Guid? customerId = null, CancellationToken ct = default)
+    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] string? search = null, [FromQuery] string? customerId = null, CancellationToken ct = default)
         => Ok(await _sender.Send(new GetProjectsQuery(page, pageSize, search, customerId), ct));
 
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(string id, CancellationToken ct)
         => Ok(await _sender.Send(new GetProjectByIdQuery(id), ct));
 
-    [HttpGet("{id:guid}/hierarchy")]
-    public async Task<IActionResult> GetHierarchy(Guid id, CancellationToken ct)
+    [HttpGet("{id}/hierarchy")]
+    public async Task<IActionResult> GetHierarchy(string id, CancellationToken ct)
         => Ok(await _sender.Send(new GetProjectHierarchyQuery(id), ct));
 
-    [HttpGet("{id:guid}/users")]
-    public async Task<IActionResult> GetUsers(Guid id, CancellationToken ct)
+    [HttpGet("{id}/users")]
+    public async Task<IActionResult> GetUsers(string id, CancellationToken ct)
         => Ok(await _sender.Send(new GetUsersByProjectQuery(id), ct));
 
     [HttpPost]
@@ -39,34 +39,34 @@ public class ProjectsController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id }, id);
     }
 
-    [HttpPost("{id:guid}/users")]
-    public async Task<IActionResult> AssignUser(Guid id, [FromBody] AssignUserToProjectRequest request, CancellationToken ct)
+    [HttpPost("{id}/users")]
+    public async Task<IActionResult> AssignUser(string id, [FromBody] AssignUserToProjectRequest request, CancellationToken ct)
     {
         await _sender.Send(new AssignUserToProjectCommand(request.UserId, id), ct);
         return NoContent();
     }
 
-    [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProjectCommand command, CancellationToken ct)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(string id, [FromBody] UpdateProjectCommand command, CancellationToken ct)
     {
         if (id != command.Id) return BadRequest();
         await _sender.Send(command, ct);
         return NoContent();
     }
 
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Archive(Guid id, CancellationToken ct)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Archive(string id, CancellationToken ct)
     {
         await _sender.Send(new ArchiveProjectCommand(id), ct);
         return NoContent();
     }
 
-    [HttpDelete("{id:guid}/users/{userId:guid}")]
-    public async Task<IActionResult> RemoveUser(Guid id, Guid userId, CancellationToken ct)
+    [HttpDelete("{id}/users/{userId}")]
+    public async Task<IActionResult> RemoveUser(string id, string userId, CancellationToken ct)
     {
         await _sender.Send(new RemoveUserFromProjectCommand(userId, id), ct);
         return NoContent();
     }
 
-    public record AssignUserToProjectRequest(Guid UserId);
+    public record AssignUserToProjectRequest(string UserId);
 }

@@ -3,4 +3,4 @@ using TimeTracker.Application.DTOs;
 
 namespace TimeTracker.Application.Projects.Queries;
 
-public record GetProjectByIdQuery(Guid Id) : IRequest<ProjectDto>;
+public record GetProjectByIdQuery(string Id) : IRequest<ProjectDto>;

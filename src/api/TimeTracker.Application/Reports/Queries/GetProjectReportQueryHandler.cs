@@ -58,10 +58,10 @@ public class GetProjectReportQueryHandler : IRequestHandler<GetProjectReportQuer
         };
     }
 
-    private async Task<HashSet<Guid>> CollectProjectIdsAsync(Guid rootId, CancellationToken ct)
+    private async Task<HashSet<string>> CollectProjectIdsAsync(string rootId, CancellationToken ct)
     {
-        var ids = new HashSet<Guid> { rootId };
-        var queue = new Queue<Guid>();
+        var ids = new HashSet<string> { rootId };
+        var queue = new Queue<string>();
         queue.Enqueue(rootId);
 
         while (queue.Count > 0)

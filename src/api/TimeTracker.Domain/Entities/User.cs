@@ -4,7 +4,7 @@ namespace TimeTracker.Domain.Entities;
 
 public class User
 {
-    public Guid Id { get; init; }
+    public string Id { get; init; } = string.Empty;
     public string ExternalId { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;

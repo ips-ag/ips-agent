@@ -15,7 +15,7 @@ public class EfRepository<T> : IRepository<T> where T : class
         _dbSet = context.Set<T>();
     }
 
-    public async Task<T?> GetByIdAsync(Guid id, CancellationToken ct = default)
+    public async Task<T?> GetByIdAsync(string id, CancellationToken ct = default)
         => await _dbSet.FindAsync(new object[] { id }, ct);
 
     public async Task<IReadOnlyList<T>> ListAsync(CancellationToken ct = default)

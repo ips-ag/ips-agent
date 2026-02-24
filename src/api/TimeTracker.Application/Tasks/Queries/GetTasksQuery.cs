@@ -8,4 +8,4 @@ public record GetTasksQuery(
     int Page = 1,
     int PageSize = 20,
     string? Search = null,
-    Guid? ProjectId = null) : IRequest<PagedList<TaskDto>>;
+    string? ProjectId = null) : IRequest<PagedList<TaskDto>>;

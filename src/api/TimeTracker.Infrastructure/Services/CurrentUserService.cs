@@ -17,13 +17,11 @@ public class CurrentUserService : ICurrentUserService
 
     public bool IsAuthenticated => User?.Identity?.IsAuthenticated ?? false;
 
-    public Guid? UserId
+    public string? UserId
     {
         get
         {
-            var oid = User?.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier")
-                      ?? User?.FindFirstValue("oid");
-            return oid is not null ? Guid.Parse(oid) : null;
+            return User?.FindFirstValue("sub");
         }
     }
 

@@ -13,9 +13,9 @@ public class ReportsController : ControllerBase
     private readonly ISender _sender;
     public ReportsController(ISender sender) => _sender = sender;
 
-    [HttpGet("project/{id:guid}")]
+    [HttpGet("project/{id}")]
     public async Task<IActionResult> GetProjectReport(
-        Guid id,
+        string id,
         [FromQuery] string? dateFrom = null,
         [FromQuery] string? dateTo = null,
         CancellationToken ct = default)
@@ -25,9 +25,9 @@ public class ReportsController : ControllerBase
         return Ok(await _sender.Send(new GetProjectReportQuery(id, from, to), ct));
     }
 
-    [HttpGet("user/{id:guid}")]
+    [HttpGet("user/{id}")]
     public async Task<IActionResult> GetUserReport(
-        Guid id,
+        string id,
         [FromQuery] string? dateFrom = null,
         [FromQuery] string? dateTo = null,
         CancellationToken ct = default)

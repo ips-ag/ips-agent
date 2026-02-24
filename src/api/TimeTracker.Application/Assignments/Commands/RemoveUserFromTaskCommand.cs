@@ -2,4 +2,4 @@ using MediatR;
 
 namespace TimeTracker.Application.Assignments.Commands;
 
-public record RemoveUserFromTaskCommand(Guid UserId, Guid TaskId) : IRequest<MediatR.Unit>;
+public record RemoveUserFromTaskCommand(string UserId, string TaskId) : IRequest<MediatR.Unit>;

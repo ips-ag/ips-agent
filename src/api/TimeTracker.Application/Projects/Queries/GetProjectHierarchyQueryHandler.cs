@@ -31,7 +31,7 @@ public class GetProjectHierarchyQueryHandler : IRequestHandler<GetProjectHierarc
         return dto;
     }
 
-    private async Task<List<ProjectDto>> LoadChildrenAsync(Guid parentId, CancellationToken ct)
+    private async Task<List<ProjectDto>> LoadChildrenAsync(string parentId, CancellationToken ct)
     {
         var children = await _repository.Query()
             .Include(p => p.Customer)

@@ -10,6 +10,12 @@ public class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectTask>
     {
         builder.HasKey(t => t.Id);
 
+        builder.Property(t => t.Id)
+            .HasMaxLength(36);
+
+        builder.Property(t => t.ProjectId)
+            .HasMaxLength(36);
+
         builder.Property(t => t.Name)
             .IsRequired()
             .HasMaxLength(200);

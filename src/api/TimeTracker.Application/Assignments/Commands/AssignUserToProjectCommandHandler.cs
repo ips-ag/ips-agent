@@ -27,7 +27,8 @@ public class AssignUserToProjectCommandHandler : IRequestHandler<AssignUserToPro
 
     public async Task<MediatR.Unit> Handle(AssignUserToProjectCommand request, CancellationToken ct)
     {
-        _ = await _userRepository.GetByIdAsync(request.UserId, ct)
+        _ = await _userRepository.Query()
+            .FirstOrDefaultAsync(u => u.Id == request.UserId, ct)
             ?? throw new NotFoundException(nameof(User), request.UserId);
 
         _ = await _projectRepository.GetByIdAsync(request.ProjectId, ct)

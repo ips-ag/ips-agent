@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using TimeTracker.Application.Common.Exceptions;
 using TimeTracker.Domain.Entities;
 using TimeTracker.Domain.Enums;
@@ -19,7 +20,8 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, Media
 
     public async Task<MediatR.Unit> Handle(UpdateUserCommand request, CancellationToken ct)
     {
-        var entity = await _repository.GetByIdAsync(request.Id, ct)
+        var entity = await _repository.Query()
+            .FirstOrDefaultAsync(u => u.Id == request.Id, ct)
             ?? throw new NotFoundException(nameof(User), request.Id);
 
         entity.FirstName = request.FirstName;

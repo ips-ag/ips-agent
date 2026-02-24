@@ -1,5 +1,6 @@
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using TimeTracker.Application.Common.Exceptions;
 using TimeTracker.Application.DTOs;
 using TimeTracker.Domain.Entities;
@@ -20,7 +21,8 @@ public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserDto
 
     public async Task<UserDto> Handle(GetUserByIdQuery request, CancellationToken ct)
     {
-        var entity = await _repository.GetByIdAsync(request.Id, ct)
+        var entity = await _repository.Query()
+            .FirstOrDefaultAsync(u => u.Id == request.Id, ct)
             ?? throw new NotFoundException(nameof(User), request.Id);
 
         return _mapper.Map<UserDto>(entity);

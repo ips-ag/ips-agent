@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using TimeTracker.Application.Common.Exceptions;
 using TimeTracker.Domain.Entities;
 using TimeTracker.Domain.Interfaces;
@@ -18,7 +19,8 @@ public class DeactivateUserCommandHandler : IRequestHandler<DeactivateUserComman
 
     public async Task<MediatR.Unit> Handle(DeactivateUserCommand request, CancellationToken ct)
     {
-        var entity = await _repository.GetByIdAsync(request.Id, ct)
+        var entity = await _repository.Query()
+            .FirstOrDefaultAsync(u => u.Id == request.Id, ct)
             ?? throw new NotFoundException(nameof(User), request.Id);
 
         entity.IsActive = false;

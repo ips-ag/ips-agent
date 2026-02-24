@@ -3,7 +3,7 @@ using MediatR;
 namespace TimeTracker.Application.Users.Commands;
 
 public record UpdateUserCommand(
-    Guid Id,
+    string Id,
     string FirstName,
     string LastName,
     string Role,

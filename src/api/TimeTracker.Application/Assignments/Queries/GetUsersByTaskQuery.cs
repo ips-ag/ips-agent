@@ -3,4 +3,4 @@ using TimeTracker.Application.DTOs;
 
 namespace TimeTracker.Application.Assignments.Queries;
 
-public record GetUsersByTaskQuery(Guid TaskId) : IRequest<List<UserDto>>;
+public record GetUsersByTaskQuery(string TaskId) : IRequest<List<UserDto>>;

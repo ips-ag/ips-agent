@@ -2,4 +2,4 @@ using MediatR;
 
 namespace TimeTracker.Application.Assignments.Commands;
 
-public record AssignUserToTaskCommand(Guid UserId, Guid TaskId) : IRequest<MediatR.Unit>;
+public record AssignUserToTaskCommand(string UserId, string TaskId) : IRequest<MediatR.Unit>;

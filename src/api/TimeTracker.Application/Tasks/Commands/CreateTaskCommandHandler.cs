@@ -5,7 +5,7 @@ using TimeTracker.Domain.Interfaces;
 
 namespace TimeTracker.Application.Tasks.Commands;
 
-public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Guid>
+public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, string>
 {
     private readonly IRepository<ProjectTask> _taskRepository;
     private readonly IRepository<Project> _projectRepository;
@@ -21,14 +21,14 @@ public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Guid>
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Guid> Handle(CreateTaskCommand request, CancellationToken ct)
+    public async Task<string> Handle(CreateTaskCommand request, CancellationToken ct)
     {
         _ = await _projectRepository.GetByIdAsync(request.ProjectId, ct)
             ?? throw new NotFoundException(nameof(Project), request.ProjectId);
 
         var entity = new ProjectTask
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.NewGuid().ToString(),
             ProjectId = request.ProjectId,
             Name = request.Name,
             Code = request.Code,

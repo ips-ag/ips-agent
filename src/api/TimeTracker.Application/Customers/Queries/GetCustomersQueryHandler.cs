@@ -26,9 +26,9 @@ public class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery, Paged
             .Include(c => c.Unit)
             .AsQueryable();
 
-        if (request.UnitId.HasValue)
+        if (request.UnitId != null)
         {
-            query = query.Where(c => c.UnitId == request.UnitId.Value);
+            query = query.Where(c => c.UnitId == request.UnitId);
         }
 
         if (!string.IsNullOrWhiteSpace(request.Search))

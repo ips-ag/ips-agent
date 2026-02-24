@@ -2,8 +2,8 @@ namespace TimeTracker.Domain.Entities;
 
 public class Customer
 {
-    public Guid Id { get; init; }
-    public Guid UnitId { get; init; }
+    public string Id { get; init; } = string.Empty;
+    public string UnitId { get; init; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public string? ContactEmail { get; set; }

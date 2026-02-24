@@ -2,8 +2,8 @@ namespace TimeTracker.Domain.Entities;
 
 public class ProjectTask
 {
-    public Guid Id { get; init; }
-    public Guid ProjectId { get; init; }
+    public string Id { get; init; } = string.Empty;
+    public string ProjectId { get; init; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string Code { get; set; } = string.Empty;
     public string? Description { get; set; }

@@ -10,6 +10,15 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
     {
         builder.HasKey(p => p.Id);
 
+        builder.Property(p => p.Id)
+            .HasMaxLength(36);
+
+        builder.Property(p => p.CustomerId)
+            .HasMaxLength(36);
+
+        builder.Property(p => p.ParentId)
+            .HasMaxLength(36);
+
         builder.Property(p => p.Name)
             .IsRequired()
             .HasMaxLength(200);

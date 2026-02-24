@@ -10,6 +10,12 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
         builder.HasKey(c => c.Id);
 
+        builder.Property(c => c.Id)
+            .HasMaxLength(36);
+
+        builder.Property(c => c.UnitId)
+            .HasMaxLength(36);
+
         builder.Property(c => c.Name)
             .IsRequired()
             .HasMaxLength(200);

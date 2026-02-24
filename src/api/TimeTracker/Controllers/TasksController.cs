@@ -17,15 +17,15 @@ public class TasksController : ControllerBase
     public TasksController(ISender sender) => _sender = sender;
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] string? search = null, [FromQuery] Guid? projectId = null, CancellationToken ct = default)
+    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] string? search = null, [FromQuery] string? projectId = null, CancellationToken ct = default)
         => Ok(await _sender.Send(new GetTasksQuery(page, pageSize, search, projectId), ct));
 
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(string id, CancellationToken ct)
         => Ok(await _sender.Send(new GetTaskByIdQuery(id), ct));
 
-    [HttpGet("{id:guid}/users")]
-    public async Task<IActionResult> GetUsers(Guid id, CancellationToken ct)
+    [HttpGet("{id}/users")]
+    public async Task<IActionResult> GetUsers(string id, CancellationToken ct)
         => Ok(await _sender.Send(new GetUsersByTaskQuery(id), ct));
 
     [HttpPost]
@@ -35,34 +35,34 @@ public class TasksController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id }, id);
     }
 
-    [HttpPost("{id:guid}/users")]
-    public async Task<IActionResult> AssignUser(Guid id, [FromBody] AssignUserToTaskRequest request, CancellationToken ct)
+    [HttpPost("{id}/users")]
+    public async Task<IActionResult> AssignUser(string id, [FromBody] AssignUserToTaskRequest request, CancellationToken ct)
     {
         await _sender.Send(new AssignUserToTaskCommand(request.UserId, id), ct);
         return NoContent();
     }
 
-    [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTaskCommand command, CancellationToken ct)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(string id, [FromBody] UpdateTaskCommand command, CancellationToken ct)
     {
         if (id != command.Id) return BadRequest();
         await _sender.Send(command, ct);
         return NoContent();
     }
 
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Archive(Guid id, CancellationToken ct)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Archive(string id, CancellationToken ct)
     {
         await _sender.Send(new ArchiveTaskCommand(id), ct);
         return NoContent();
     }
 
-    [HttpDelete("{id:guid}/users/{userId:guid}")]
-    public async Task<IActionResult> RemoveUser(Guid id, Guid userId, CancellationToken ct)
+    [HttpDelete("{id}/users/{userId}")]
+    public async Task<IActionResult> RemoveUser(string id, string userId, CancellationToken ct)
     {
         await _sender.Send(new RemoveUserFromTaskCommand(userId, id), ct);
         return NoContent();
     }
 
-    public record AssignUserToTaskRequest(Guid UserId);
+    public record AssignUserToTaskRequest(string UserId);
 }

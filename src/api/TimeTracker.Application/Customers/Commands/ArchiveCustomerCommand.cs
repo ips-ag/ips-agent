@@ -2,4 +2,4 @@ using MediatR;
 
 namespace TimeTracker.Application.Customers.Commands;
 
-public record ArchiveCustomerCommand(Guid Id) : IRequest<MediatR.Unit>;
+public record ArchiveCustomerCommand(string Id) : IRequest<MediatR.Unit>;

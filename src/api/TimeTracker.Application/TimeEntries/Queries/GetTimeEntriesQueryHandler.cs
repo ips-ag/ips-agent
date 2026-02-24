@@ -28,14 +28,14 @@ public class GetTimeEntriesQueryHandler : IRequestHandler<GetTimeEntriesQuery, P
                 .ThenInclude(t => t.Project)
             .AsQueryable();
 
-        if (request.UserId.HasValue)
+        if (request.UserId != null)
         {
-            query = query.Where(te => te.UserId == request.UserId.Value);
+            query = query.Where(te => te.UserId == request.UserId);
         }
 
-        if (request.TaskId.HasValue)
+        if (request.TaskId != null)
         {
-            query = query.Where(te => te.TaskId == request.TaskId.Value);
+            query = query.Where(te => te.TaskId == request.TaskId);
         }
 
         if (request.DateFrom.HasValue)

@@ -10,6 +10,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.HasKey(u => u.Id);
 
+        builder.Property(u => u.Id)
+            .HasMaxLength(36);
+
         builder.Property(u => u.ExternalId)
             .IsRequired()
             .HasMaxLength(200);

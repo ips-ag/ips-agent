@@ -6,8 +6,8 @@ namespace TimeTracker.Application.DTOs;
 
 public class CustomerDto : IMapFrom<Customer>
 {
-    public Guid Id { get; set; }
-    public Guid UnitId { get; set; }
+    public string Id { get; set; } = string.Empty;
+    public string UnitId { get; set; } = string.Empty;
     public string? UnitName { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }

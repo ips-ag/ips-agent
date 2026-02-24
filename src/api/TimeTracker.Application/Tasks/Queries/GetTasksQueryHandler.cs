@@ -26,9 +26,9 @@ public class GetTasksQueryHandler : IRequestHandler<GetTasksQuery, PagedList<Tas
             .Include(t => t.Project)
             .AsQueryable();
 
-        if (request.ProjectId.HasValue)
+        if (request.ProjectId != null)
         {
-            query = query.Where(t => t.ProjectId == request.ProjectId.Value);
+            query = query.Where(t => t.ProjectId == request.ProjectId);
         }
 
         if (!string.IsNullOrWhiteSpace(request.Search))

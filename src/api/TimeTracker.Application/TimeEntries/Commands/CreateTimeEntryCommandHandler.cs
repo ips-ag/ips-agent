@@ -5,7 +5,7 @@ using TimeTracker.Domain.Interfaces;
 
 namespace TimeTracker.Application.TimeEntries.Commands;
 
-public class CreateTimeEntryCommandHandler : IRequestHandler<CreateTimeEntryCommand, Guid>
+public class CreateTimeEntryCommandHandler : IRequestHandler<CreateTimeEntryCommand, string>
 {
     private readonly IRepository<TimeEntry> _timeEntryRepository;
     private readonly IRepository<ProjectTask> _taskRepository;
@@ -21,7 +21,7 @@ public class CreateTimeEntryCommandHandler : IRequestHandler<CreateTimeEntryComm
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Guid> Handle(CreateTimeEntryCommand request, CancellationToken ct)
+    public async Task<string> Handle(CreateTimeEntryCommand request, CancellationToken ct)
     {
         var task = await _taskRepository.GetByIdAsync(request.TaskId, ct)
             ?? throw new NotFoundException(nameof(ProjectTask), request.TaskId);
@@ -33,7 +33,7 @@ public class CreateTimeEntryCommandHandler : IRequestHandler<CreateTimeEntryComm
 
         var entity = new TimeEntry
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.NewGuid().ToString(),
             UserId = request.UserId,
             TaskId = request.TaskId,
             Date = request.Date,

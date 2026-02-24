@@ -5,7 +5,7 @@ using TimeTracker.Domain.Interfaces;
 
 namespace TimeTracker.Application.Customers.Commands;
 
-public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, Guid>
+public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, string>
 {
     private readonly IRepository<Customer> _customerRepository;
     private readonly IRepository<Domain.Entities.Unit> _unitRepository;
@@ -21,14 +21,14 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Guid> Handle(CreateCustomerCommand request, CancellationToken ct)
+    public async Task<string> Handle(CreateCustomerCommand request, CancellationToken ct)
     {
         _ = await _unitRepository.GetByIdAsync(request.UnitId, ct)
             ?? throw new NotFoundException(nameof(Domain.Entities.Unit), request.UnitId);
 
         var entity = new Customer
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.NewGuid().ToString(),
             UnitId = request.UnitId,
             Name = request.Name,
             Description = request.Description,

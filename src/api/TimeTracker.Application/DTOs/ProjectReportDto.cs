@@ -2,7 +2,7 @@ namespace TimeTracker.Application.DTOs;
 
 public class ProjectReportDto
 {
-    public Guid ProjectId { get; set; }
+    public string ProjectId { get; set; } = string.Empty;
     public string ProjectName { get; set; } = string.Empty;
     public decimal TotalHours { get; set; }
     public List<TaskBreakdownDto> TaskBreakdown { get; set; } = new();

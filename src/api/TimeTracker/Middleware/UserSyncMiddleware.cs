@@ -20,13 +20,12 @@ public class UserSyncMiddleware
     {
         if (context.User.Identity?.IsAuthenticated == true)
         {
-            var oid = context.User.FindFirstValue("http://schemas.microsoft.com/identity/claims/objectidentifier")
-                      ?? context.User.FindFirstValue("oid");
+            var sub = context.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? context.User.FindFirstValue("sub");
 
-            if (oid is not null)
+            if (sub is not null)
             {
                 var existing = await userRepo.Query()
-                    .FirstOrDefaultAsync(u => u.ExternalId == oid);
+                    .FirstOrDefaultAsync(u => u.ExternalId == sub);
 
                 if (existing is null)
                 {
@@ -36,17 +35,17 @@ public class UserSyncMiddleware
 
                     var user = new User
                     {
-                        Id = Guid.NewGuid(),
-                        ExternalId = oid,
+                        Id = Guid.NewGuid().ToString(),
+                        ExternalId = sub,
                         Email = email,
-                        FirstName = context.User.FindFirstValue("given_name") ?? string.Empty,
-                        LastName = context.User.FindFirstValue("family_name") ?? string.Empty,
+                        FirstName = context.User.FindFirstValue(ClaimTypes.GivenName)?? context.User.FindFirstValue("given_name") ?? string.Empty,
+                        LastName = context.User.FindFirstValue(ClaimTypes.Surname) ?? context.User.FindFirstValue("family_name") ?? string.Empty,
                     };
 
                     await userRepo.AddAsync(user);
                     await uow.SaveChangesAsync();
 
-                    _logger.LogInformation("Auto-provisioned new user {Email} (oid: {Oid})", email, oid);
+                    _logger.LogInformation("Auto-provisioned new user {Email} (sub: {Sub})", email, sub);
                 }
             }
         }

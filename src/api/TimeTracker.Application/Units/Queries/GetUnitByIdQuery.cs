@@ -3,4 +3,4 @@ using TimeTracker.Application.DTOs;
 
 namespace TimeTracker.Application.Units.Queries;
 
-public record GetUnitByIdQuery(Guid Id) : IRequest<UnitDto>;
+public record GetUnitByIdQuery(string Id) : IRequest<UnitDto>;

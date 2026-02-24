@@ -2,9 +2,9 @@ namespace TimeTracker.Domain.Entities;
 
 public class Project
 {
-    public Guid Id { get; init; }
-    public Guid CustomerId { get; init; }
-    public Guid? ParentId { get; init; }
+    public string Id { get; init; } = string.Empty;
+    public string CustomerId { get; init; } = string.Empty;
+    public string? ParentId { get; init; }
     public string Name { get; set; } = string.Empty;
     public string Code { get; set; } = string.Empty;
     public string? Description { get; set; }

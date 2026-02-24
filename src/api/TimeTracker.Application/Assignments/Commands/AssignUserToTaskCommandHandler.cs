@@ -27,7 +27,8 @@ public class AssignUserToTaskCommandHandler : IRequestHandler<AssignUserToTaskCo
 
     public async Task<MediatR.Unit> Handle(AssignUserToTaskCommand request, CancellationToken ct)
     {
-        _ = await _userRepository.GetByIdAsync(request.UserId, ct)
+        _ = await _userRepository.Query()
+            .FirstOrDefaultAsync(u => u.Id == request.UserId, ct)
             ?? throw new NotFoundException(nameof(User), request.UserId);
 
         _ = await _taskRepository.GetByIdAsync(request.TaskId, ct)

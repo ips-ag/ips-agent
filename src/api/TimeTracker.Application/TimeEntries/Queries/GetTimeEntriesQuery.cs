@@ -7,7 +7,7 @@ namespace TimeTracker.Application.TimeEntries.Queries;
 public record GetTimeEntriesQuery(
     int Page = 1,
     int PageSize = 20,
-    Guid? UserId = null,
-    Guid? TaskId = null,
+    string? UserId = null,
+    string? TaskId = null,
     DateOnly? DateFrom = null,
     DateOnly? DateTo = null) : IRequest<PagedList<TimeEntryDto>>;

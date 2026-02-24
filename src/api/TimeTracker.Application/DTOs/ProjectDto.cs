@@ -6,10 +6,10 @@ namespace TimeTracker.Application.DTOs;
 
 public class ProjectDto : IMapFrom<Project>
 {
-    public Guid Id { get; set; }
-    public Guid CustomerId { get; set; }
+    public string Id { get; set; } = string.Empty;
+    public string CustomerId { get; set; } = string.Empty;
     public string? CustomerName { get; set; }
-    public Guid? ParentId { get; set; }
+    public string? ParentId { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Code { get; set; } = string.Empty;
     public string? Description { get; set; }

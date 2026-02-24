@@ -10,6 +10,12 @@ public class TaskUserConfiguration : IEntityTypeConfiguration<TaskUser>
     {
         builder.HasKey(tu => new { tu.UserId, tu.TaskId });
 
+        builder.Property(tu => tu.UserId)
+            .HasMaxLength(36);
+
+        builder.Property(tu => tu.TaskId)
+            .HasMaxLength(36);
+
         builder.HasOne(tu => tu.User)
             .WithMany(u => u.TaskUsers)
             .HasForeignKey(tu => tu.UserId)

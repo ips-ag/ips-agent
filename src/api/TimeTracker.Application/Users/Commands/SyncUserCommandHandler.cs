@@ -5,7 +5,7 @@ using TimeTracker.Domain.Interfaces;
 
 namespace TimeTracker.Application.Users.Commands;
 
-public class SyncUserCommandHandler : IRequestHandler<SyncUserCommand, Guid>
+public class SyncUserCommandHandler : IRequestHandler<SyncUserCommand, string>
 {
     private readonly IRepository<User> _repository;
     private readonly IUnitOfWork _unitOfWork;
@@ -16,7 +16,7 @@ public class SyncUserCommandHandler : IRequestHandler<SyncUserCommand, Guid>
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Guid> Handle(SyncUserCommand request, CancellationToken ct)
+    public async Task<string> Handle(SyncUserCommand request, CancellationToken ct)
     {
         var existingUser = await _repository.Query()
             .FirstOrDefaultAsync(u => u.Email == request.Email, ct);
@@ -33,7 +33,7 @@ public class SyncUserCommandHandler : IRequestHandler<SyncUserCommand, Guid>
 
         var entity = new User
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.NewGuid().ToString(),
             Email = request.Email,
             FirstName = request.FirstName,
             LastName = request.LastName,

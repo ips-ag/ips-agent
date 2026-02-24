@@ -10,6 +10,12 @@ public class ProjectUserConfiguration : IEntityTypeConfiguration<ProjectUser>
     {
         builder.HasKey(pu => new { pu.UserId, pu.ProjectId });
 
+        builder.Property(pu => pu.UserId)
+            .HasMaxLength(36);
+
+        builder.Property(pu => pu.ProjectId)
+            .HasMaxLength(36);
+
         builder.HasOne(pu => pu.User)
             .WithMany(u => u.ProjectUsers)
             .HasForeignKey(pu => pu.UserId)

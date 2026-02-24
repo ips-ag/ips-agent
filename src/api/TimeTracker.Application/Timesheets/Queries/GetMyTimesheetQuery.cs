@@ -3,4 +3,4 @@ using TimeTracker.Application.DTOs;
 
 namespace TimeTracker.Application.Timesheets.Queries;
 
-public record GetMyTimesheetQuery(Guid UserId, DateOnly WeekStart) : IRequest<TimesheetDto>;
+public record GetMyTimesheetQuery(string UserId, DateOnly WeekStart) : IRequest<TimesheetDto>;

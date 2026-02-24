@@ -26,9 +26,9 @@ public class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, PagedLi
             .Include(p => p.Customer)
             .AsQueryable();
 
-        if (request.CustomerId.HasValue)
+        if (request.CustomerId != null)
         {
-            query = query.Where(p => p.CustomerId == request.CustomerId.Value);
+            query = query.Where(p => p.CustomerId == request.CustomerId);
         }
 
         if (!string.IsNullOrWhiteSpace(request.Search))

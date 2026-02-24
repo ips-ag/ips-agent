@@ -2,9 +2,9 @@ namespace TimeTracker.Domain.Entities;
 
 public class TimeEntry
 {
-    public Guid Id { get; init; }
-    public Guid UserId { get; init; }
-    public Guid TaskId { get; init; }
+    public string Id { get; init; } = string.Empty;
+    public string UserId { get; init; } = string.Empty;
+    public string TaskId { get; init; } = string.Empty;
     public DateOnly Date { get; set; }
     public decimal Hours { get; set; }
     public string? Description { get; set; }

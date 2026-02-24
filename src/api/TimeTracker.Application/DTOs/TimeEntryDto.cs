@@ -6,10 +6,10 @@ namespace TimeTracker.Application.DTOs;
 
 public class TimeEntryDto : IMapFrom<TimeEntry>
 {
-    public Guid Id { get; set; }
-    public Guid UserId { get; set; }
+    public string Id { get; set; } = string.Empty;
+    public string UserId { get; set; } = string.Empty;
     public string? UserName { get; set; }
-    public Guid TaskId { get; set; }
+    public string TaskId { get; set; } = string.Empty;
     public string? TaskName { get; set; }
     public string? ProjectName { get; set; }
     public string Date { get; set; } = string.Empty;

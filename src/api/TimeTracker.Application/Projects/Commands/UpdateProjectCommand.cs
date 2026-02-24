@@ -3,7 +3,7 @@ using MediatR;
 namespace TimeTracker.Application.Projects.Commands;
 
 public record UpdateProjectCommand(
-    Guid Id,
+    string Id,
     string Name,
     string Code,
     string? Description,

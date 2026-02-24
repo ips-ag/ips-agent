@@ -10,6 +10,15 @@ public class TimeEntryConfiguration : IEntityTypeConfiguration<TimeEntry>
     {
         builder.HasKey(te => te.Id);
 
+        builder.Property(te => te.Id)
+            .HasMaxLength(36);
+
+        builder.Property(te => te.UserId)
+            .HasMaxLength(36);
+
+        builder.Property(te => te.TaskId)
+            .HasMaxLength(36);
+
         builder.Property(te => te.Hours)
             .HasPrecision(5, 2);
 
