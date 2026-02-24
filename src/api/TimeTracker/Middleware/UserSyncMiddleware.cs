@@ -20,28 +20,26 @@ public class UserSyncMiddleware
     {
         if (context.User.Identity?.IsAuthenticated == true)
         {
-            var sub = context.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? context.User.FindFirstValue("sub");
-
+            string? sub = context.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? context.User.FindFirstValue("sub");
             if (sub is not null)
             {
-                var existing = await userRepo.Query()
-                    .FirstOrDefaultAsync(u => u.ExternalId == sub);
+                var existing = await userRepo.Query().FirstOrDefaultAsync(u => u.ExternalId == sub);
 
                 if (existing is null)
                 {
-                    var email = context.User.FindFirstValue(ClaimTypes.Email)
-                                ?? context.User.FindFirstValue("preferred_username")
-                                ?? string.Empty;
-
+                    string email = context.User.FindFirstValue(ClaimTypes.Email) ??
+                        context.User.FindFirstValue("preferred_username") ?? string.Empty;
                     var user = new User
                     {
                         Id = Guid.NewGuid().ToString(),
                         ExternalId = sub,
                         Email = email,
-                        FirstName = context.User.FindFirstValue(ClaimTypes.GivenName)?? context.User.FindFirstValue("given_name") ?? string.Empty,
-                        LastName = context.User.FindFirstValue(ClaimTypes.Surname) ?? context.User.FindFirstValue("family_name") ?? string.Empty,
+                        FirstName =
+                            context.User.FindFirstValue(ClaimTypes.GivenName) ??
+                            context.User.FindFirstValue("given_name") ?? string.Empty,
+                        LastName = context.User.FindFirstValue(ClaimTypes.Surname) ??
+                            context.User.FindFirstValue("family_name") ?? string.Empty
                     };
-
                     await userRepo.AddAsync(user);
                     await uow.SaveChangesAsync();
 
@@ -49,7 +47,6 @@ public class UserSyncMiddleware
                 }
             }
         }
-
         await _next(context);
     }
 }

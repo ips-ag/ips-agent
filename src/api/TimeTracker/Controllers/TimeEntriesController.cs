@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TimeTracker.Application.Common.Interfaces;
+using TimeTracker.Application.DTOs;
 using TimeTracker.Application.TimeEntries.Commands;
 using TimeTracker.Application.TimeEntries.Queries;
 
@@ -30,18 +31,27 @@ public class TimeEntriesController : ControllerBase
         [FromQuery] DateOnly? dateFrom = null,
         [FromQuery] DateOnly? dateTo = null,
         CancellationToken ct = default)
-        => Ok(await _sender.Send(new GetTimeEntriesQuery(page, pageSize, userId, taskId, dateFrom, dateTo), ct));
+    {
+        return Ok(await _sender.Send(new GetTimeEntriesQuery(page, pageSize, userId, taskId, dateFrom, dateTo), ct));
+    }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(string id, CancellationToken ct)
-        => Ok(await _sender.Send(new GetTimeEntryByIdQuery(id), ct));
+    {
+        return Ok(await _sender.Send(new GetTimeEntryByIdQuery(id), ct));
+    }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateTimeEntryCommand command, CancellationToken ct)
+    public async Task<IActionResult> Create([FromBody] CreateTimeEntryRequestDto request, CancellationToken ct)
     {
-        var userId = _currentUser.UserId ?? throw new UnauthorizedAccessException();
-        var commandWithUser = command with { UserId = userId };
-        var id = await _sender.Send(commandWithUser, ct);
+        string userId = _currentUser.UserId ?? throw new UnauthorizedAccessException();
+        var command = new CreateTimeEntryCommand(
+            UserId: userId,
+            TaskId: request.TaskId,
+            Date: request.Date,
+            Hours: request.Hours,
+            Description: request.Description);
+        string id = await _sender.Send(command, ct);
         return CreatedAtAction(nameof(GetById), new { id }, id);
     }
 
