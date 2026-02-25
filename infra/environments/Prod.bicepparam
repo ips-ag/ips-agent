@@ -1,4 +1,3 @@
-#disable-next-line BCP258
 using '../main.bicep'
 
 param env = 'prod'
