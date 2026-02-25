@@ -1,6 +1,13 @@
 name: Deploy Infrastructure
 
 on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        type: string
+        default: Dev
   workflow_dispatch:
     inputs:
       environment:
@@ -11,13 +18,7 @@ on:
           - Dev
           - Test
           - Prod
-  push:
-    branches:
-      - main
-      - feature/fake-intra
-    paths:
-      - infra/**
-      - .github/workflows/infra.yml
+        default: Dev
 
 permissions:
   id-token: write
@@ -35,12 +36,12 @@ jobs:
         run: az bicep lint --file infra/main.bicep
 
   deploy:
-    name: Deploy (${{ inputs.environment || 'Dev' }})
+    name: Deploy (${{ inputs.environment }})
     needs: lint
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment || 'Dev' }}
+    environment: ${{ inputs.environment }}
     env:
-      ENVIRONMENT: ${{ inputs.environment || 'Dev' }}
+      ENVIRONMENT: ${{ inputs.environment }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

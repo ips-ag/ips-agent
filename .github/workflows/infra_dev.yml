@@ -1,0 +1,24 @@
+name: Deploy Infrastructure (Dev)
+
+on:
+  push:
+    branches:
+      - main
+      - feature/fake-intra
+    paths:
+      - infra/**
+      - .github/workflows/infra.yml
+      - .github/workflows/infra_dev.yml
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-dev:
+    name: Deploy Infrastructure to Dev
+    uses: ./.github/workflows/infra.yml
+    with:
+      environment: Dev
+    secrets: inherit
