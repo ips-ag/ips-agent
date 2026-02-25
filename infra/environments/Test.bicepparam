@@ -27,3 +27,8 @@ param tags = {
   application: 'ipsagent'
   managedBy: 'bicep'
 }
+
+param entraIdClientId = ''
+param entraIdTenantId = ''
+param sqlAdminLogin = ''
+param sqlAdminPassword = ''
