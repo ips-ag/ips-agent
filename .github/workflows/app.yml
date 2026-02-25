@@ -1,6 +1,13 @@
 name: Deploy App
 
 on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        type: string
+        default: Dev
   workflow_dispatch:
     inputs:
       environment:
@@ -12,13 +19,6 @@ on:
           - Test
           - Prod
         default: Dev
-  push:
-    branches:
-      - main
-      - feature/fake-intra
-    paths:
-      - src/app/**
-      - .github/workflows/app.yml
 
 permissions:
   id-token: write

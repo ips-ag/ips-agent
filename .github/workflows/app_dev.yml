@@ -1,0 +1,24 @@
+name: Deploy App (Dev)
+
+on:
+  push:
+    branches:
+      - main
+      - feature/fake-intra
+    paths:
+      - src/app/**
+      - .github/workflows/app.yml
+      - .github/workflows/app_dev.yml
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-dev:
+    name: Deploy App to Dev
+    uses: ./.github/workflows/app.yml
+    with:
+      environment: Dev
+    secrets: inherit
