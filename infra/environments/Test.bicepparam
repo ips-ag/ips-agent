@@ -9,9 +9,9 @@ param appServicePlanSku = {
 
 param sqlUseFreeLimit = false
 param sqlDatabaseSku = {
-  name: 'S1'
-  tier: 'Standard'
-  capacity: 20
+  name: 'GP_S_Gen5_2'
+  tier: 'GeneralPurpose'
+  capacity: 5
 }
 param sqlDatabaseMaxSizeBytes = 268435456000 // 250 GB
 

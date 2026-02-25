@@ -10,7 +10,7 @@ param appServicePlanSku = {
 // Dev uses the Azure SQL Free serverless offer
 param sqlUseFreeLimit = true
 param sqlDatabaseSku = {
-  name: 'GP_S_Gen5'
+  name: 'GP_S_Gen5_2'
   tier: 'GeneralPurpose'
   family: 'Gen5'
   capacity: 1

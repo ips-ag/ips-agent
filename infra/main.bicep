@@ -167,10 +167,16 @@ module apiApp 'br/public:avm/res/web/site:0.22.0' = {
       alwaysOn: true
       healthCheckPath: '/health'
       appSettings: [
-        { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=appi-connection-string)' }
+        {
+          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+          value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=appi-connection-string)'
+        }
         { name: 'AzureAd__TenantId', value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=auth-tenant-id)' }
         { name: 'AzureAd__ClientId', value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=auth-client-id)' }
-        { name: 'ConnectionStrings__DefaultConnection', value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=sql-connection-string)' }
+        {
+          name: 'ConnectionStrings__DefaultConnection'
+          value: '@Microsoft.KeyVault(VaultName=${keyVaultName};SecretName=sql-connection-string)'
+        }
       ]
     }
     httpsOnly: true
@@ -230,6 +236,7 @@ module sqlServer 'br/public:avm/res/sql/server:0.21.1' = {
         requestedBackupStorageRedundancy: env == 'prod' ? 'Geo' : 'Local'
         useFreeLimit: sqlUseFreeLimit
         freeLimitExhaustionBehavior: sqlUseFreeLimit ? 'AutoPause' : null
+        minCapacity: '0.5'
       }
     ]
     firewallRules: [
