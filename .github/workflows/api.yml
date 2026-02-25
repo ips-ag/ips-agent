@@ -66,7 +66,7 @@ jobs:
             --project src/api/TimeTracker.Infrastructure/TimeTracker.Infrastructure.csproj \
             --startup-project src/api/TimeTracker/TimeTracker.csproj \
             --configuration Release --self-contained -r linux-x64 \
-            --forced \
+            --force \
             --verbose \
             --output ./efbundle
 
