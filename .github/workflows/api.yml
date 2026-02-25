@@ -118,6 +118,8 @@ jobs:
           echo "CONNECTION_STRING=$CONNECTION_STRING" >> $GITHUB_ENV
 
       - name: Run database migrations
+        env:
+          ASPNETCORE_ENVIRONMENT: Production
         run: |
           chmod +x ./efbundle/efbundle
           ./efbundle/efbundle --connection "${{ env.CONNECTION_STRING }}"
