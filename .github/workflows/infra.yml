@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment || 'Dev' }}
     env:
-      ENVIRONMENT: ${{ inputs.environment || 'dev' }}
+      ENVIRONMENT: ${{ inputs.environment || 'Dev' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
