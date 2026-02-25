@@ -201,7 +201,7 @@ module webApp 'br/public:avm/res/web/site:0.22.0' = {
     }
     siteConfig: {
       linuxFxVersion: 'NODE|22-lts'
-      appCommandLine: 'npx serve -s dist -l 8080'
+      appCommandLine: 'pm2 serve /home/site/wwwroot --spa --no-daemon'
       appSettings: [
         { name: 'WEBSITE_NODE_DEFAULT_VERSION', value: '~22' }
       ]

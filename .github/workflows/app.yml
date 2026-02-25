@@ -11,6 +11,7 @@ on:
           - Dev
           - Test
           - Prod
+        default: Dev
   push:
     branches:
       - main
@@ -27,6 +28,7 @@ jobs:
   build:
     name: Build App
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,12 +36,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: "22"
+          cache: "npm"
           cache-dependency-path: src/app/package-lock.json
 
       - name: Set lowercase environment name
-        run: echo "ENVIRONMENT_LOWER=$(echo '${{ inputs.environment || 'Dev' }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        run: echo "ENVIRONMENT_LOWER=$(echo '${{ inputs.environment }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Install dependencies
         working-directory: src/app
@@ -61,12 +63,12 @@ jobs:
           if-no-files-found: error
 
   deploy:
-    name: Deploy (${{ inputs.environment || 'Dev' }})
+    name: Deploy (${{ inputs.environment }})
     needs: build
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment || 'Dev' }}
+    environment: ${{ inputs.environment }}
     env:
-      ENVIRONMENT: ${{ inputs.environment || 'Dev' }}
+      ENVIRONMENT: ${{ inputs.environment }}
     steps:
       - name: Set lowercase environment name
         run: echo "ENVIRONMENT_LOWER=$(echo '${{ env.ENVIRONMENT }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV

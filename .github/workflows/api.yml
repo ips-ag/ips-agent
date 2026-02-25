@@ -11,6 +11,7 @@ on:
           - Dev
           - Test
           - Prod
+        default: Dev
   push:
     branches:
       - main
@@ -78,12 +79,12 @@ jobs:
           if-no-files-found: error
 
   deploy:
-    name: Deploy (${{ inputs.environment || 'Dev' }})
+    name: Deploy (${{ inputs.environment }})
     needs: build
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment || 'Dev' }}
+    environment: ${{ inputs.environment }}
     env:
-      ENVIRONMENT: ${{ inputs.environment || 'Dev' }}
+      ENVIRONMENT: ${{ inputs.environment }}
     steps:
       - name: Set lowercase environment name
         run: echo "ENVIRONMENT_LOWER=$(echo '${{ env.ENVIRONMENT }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
