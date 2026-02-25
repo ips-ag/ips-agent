@@ -1,0 +1,86 @@
+name: Deploy API
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        type: choice
+        options:
+          - Dev
+          - Test
+          - Prod
+  push:
+    branches:
+      - main
+      - feature/fake-intra
+    paths:
+      - src/api/**
+      - .github/workflows/api.yml
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    name: Build API
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.x'
+
+      - name: Restore dependencies
+        run: dotnet restore src/api/TimeTracker/TimeTracker.csproj
+
+      - name: Build
+        run: dotnet build src/api/TimeTracker/TimeTracker.csproj --configuration Release --no-restore
+
+      - name: Publish
+        run: dotnet publish src/api/TimeTracker/TimeTracker.csproj --configuration Release --no-build --output ./publish
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: api
+          path: ./publish
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy (${{ inputs.environment || 'Dev' }})
+    needs: build
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment || 'Dev' }}
+    env:
+      ENVIRONMENT: ${{ inputs.environment || 'Dev' }}
+    steps:
+      - name: Set lowercase environment name
+        run: echo "ENVIRONMENT_LOWER=$(echo '${{ env.ENVIRONMENT }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: api
+          path: ./publish
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: app-ipsagent-api-${{ env.ENVIRONMENT_LOWER }}
+          package: ./publish
