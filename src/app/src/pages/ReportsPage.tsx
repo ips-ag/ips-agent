@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, Grid2, Typography } from '@mui/material';
+import { Card, CardActionArea, CardContent, Grid, Typography } from '@mui/material';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import PersonIcon from '@mui/icons-material/Person';
 import BarChartIcon from '@mui/icons-material/BarChart';
@@ -36,9 +36,9 @@ export default function ReportsPage() {
         Choose a report type to explore time tracking data.
       </Typography>
 
-      <Grid2 container spacing={3}>
+      <Grid container spacing={3}>
         {reportCards.map((card) => (
-          <Grid2 size={{ xs: 12, sm: 6, md: 4 }} key={card.title}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={card.title}>
             <Card sx={{ height: '100%' }}>
               <CardActionArea onClick={() => navigate(card.path)} sx={{ p: 2, height: '100%' }}>
                 <CardContent sx={{ textAlign: 'center' }}>
@@ -52,9 +52,9 @@ export default function ReportsPage() {
                 </CardContent>
               </CardActionArea>
             </Card>
-          </Grid2>
+          </Grid>
         ))}
-      </Grid2>
+      </Grid>
     </>
   );
 }

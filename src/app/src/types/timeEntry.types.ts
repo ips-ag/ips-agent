@@ -16,7 +16,7 @@ export interface CreateTimeEntryRequest {
   taskId: string;
   date: string;
   hours: number;
-  description: string;
+  description?: string;
 }
 
 export interface UpdateTimeEntryRequest {

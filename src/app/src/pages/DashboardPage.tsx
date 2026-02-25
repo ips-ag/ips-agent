@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Grid2, Typography, Button } from '@mui/material';
+import { Box, Card, CardContent, Grid, Typography, Button } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import { useNavigate } from 'react-router-dom';
@@ -32,8 +32,8 @@ export default function DashboardPage() {
         Welcome to Fake Intra — here's your week at a glance.
       </Typography>
 
-      <Grid2 container spacing={3} sx={{ mb: 4 }}>
-        <Grid2 size={{ xs: 12, sm: 6, md: 3 }}>
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -47,8 +47,8 @@ export default function DashboardPage() {
               </Typography>
             </CardContent>
           </Card>
-        </Grid2>
-        <Grid2 size={{ xs: 12, sm: 6, md: 3 }}>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Card sx={{ height: '100%' }}>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -62,8 +62,8 @@ export default function DashboardPage() {
               </Typography>
             </CardContent>
           </Card>
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
 
       <Typography variant="h6" sx={{ mb: 2 }}>
         Quick Actions

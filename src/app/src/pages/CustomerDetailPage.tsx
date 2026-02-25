@@ -88,7 +88,7 @@ export default function CustomerDetailPage() {
                 >
                   <TableCell>{p.name}</TableCell>
                   <TableCell>{p.code}</TableCell>
-                  <TableCell>{new Date(p.startDate).toLocaleDateString()}</TableCell>
+                  <TableCell>{p.startDate ? new Date(p.startDate).toLocaleDateString() : ''}</TableCell>
                   <TableCell>
                     <Chip
                       label={p.isActive ? 'Active' : 'Archived'}
