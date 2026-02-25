@@ -8,9 +8,9 @@ on:
         required: true
         type: choice
         options:
-          - dev
-          - test
-          - prod
+          - Dev
+          - Test
+          - Prod
   push:
     branches:
       - main
@@ -35,10 +35,10 @@ jobs:
         run: az bicep lint --file infra/main.bicep
 
   deploy:
-    name: Deploy (${{ inputs.environment || 'dev' }})
+    name: Deploy (${{ inputs.environment || 'Dev' }})
     needs: lint
     runs-on: ubuntu-latest
-    environment: ${{ inputs.environment || 'dev' }}
+    environment: ${{ inputs.environment || 'Dev' }}
     env:
       ENVIRONMENT: ${{ inputs.environment || 'dev' }}
     steps:
