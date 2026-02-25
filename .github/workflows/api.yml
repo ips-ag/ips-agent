@@ -56,7 +56,9 @@ jobs:
           if-no-files-found: error
 
       - name: Install EF Core tools
-        run: dotnet tool install --global dotnet-ef
+        run: |
+          dotnet tool install --global dotnet-ef
+          dotnet tool restore
 
       - name: Generate migration bundle
         run: |
@@ -64,6 +66,7 @@ jobs:
             --project src/api/TimeTracker.Infrastructure/TimeTracker.Infrastructure.csproj \
             --startup-project src/api/TimeTracker/TimeTracker.csproj \
             --self-contained -r linux-x64 \
+            --forced \
             --output ./efbundle
 
       - name: Upload migration bundle
