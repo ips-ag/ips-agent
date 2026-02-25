@@ -28,7 +28,7 @@ param sqlDatabaseSku {
   @description('Hardware generation family (required for vCore / serverless SKUs, e.g. Gen5)')
   family: string?
   @description('DTU or vCore capacity. Use 1 for the free serverless offer (GP_S_Gen5_1)')
-  capacity: int
+  capacity: int?
 }
 
 @description('Enable the Azure SQL Free serverless offer (dev only)')

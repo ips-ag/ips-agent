@@ -12,8 +12,6 @@ param sqlUseFreeLimit = true
 param sqlDatabaseSku = {
   name: 'GP_S_Gen5_2'
   tier: 'GeneralPurpose'
-  family: 'Gen5'
-  capacity: 1
 }
 param sqlDatabaseMaxSizeBytes = 34359738368 // 32 GB
 
