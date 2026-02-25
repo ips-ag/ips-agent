@@ -55,6 +55,24 @@ jobs:
           path: ./publish
           if-no-files-found: error
 
+      - name: Install EF Core tools
+        run: dotnet tool install --global dotnet-ef
+
+      - name: Generate migration bundle
+        run: |
+          dotnet ef migrations bundle \
+            --project src/api/TimeTracker.Infrastructure/TimeTracker.Infrastructure.csproj \
+            --startup-project src/api/TimeTracker/TimeTracker.csproj \
+            --self-contained -r linux-x64 \
+            --output ./efbundle
+
+      - name: Upload migration bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: efbundle
+          path: ./efbundle
+          if-no-files-found: error
+
   deploy:
     name: Deploy (${{ inputs.environment || 'Dev' }})
     needs: build
@@ -72,12 +90,32 @@ jobs:
           name: api
           path: ./publish
 
+      - name: Download migration bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: efbundle
+          path: ./efbundle
+
       - name: Azure Login (OIDC)
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Get connection string from Key Vault
+        run: |
+          CONNECTION_STRING=$(az keyvault secret show \
+            --vault-name kv-ipsagent-${{ env.ENVIRONMENT_LOWER }} \
+            --name sql-connection-string \
+            --query value -o tsv)
+          echo "::add-mask::$CONNECTION_STRING"
+          echo "CONNECTION_STRING=$CONNECTION_STRING" >> $GITHUB_ENV
+
+      - name: Run database migrations
+        run: |
+          chmod +x ./efbundle/efbundle
+          ./efbundle/efbundle --connection "${{ env.CONNECTION_STRING }}"
 
       - name: Deploy to App Service
         uses: azure/webapps-deploy@v3
