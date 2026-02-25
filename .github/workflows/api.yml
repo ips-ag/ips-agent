@@ -65,8 +65,9 @@ jobs:
           dotnet ef migrations bundle \
             --project src/api/TimeTracker.Infrastructure/TimeTracker.Infrastructure.csproj \
             --startup-project src/api/TimeTracker/TimeTracker.csproj \
-            --self-contained -r linux-x64 \
+            --configuration Release --self-contained -r linux-x64 \
             --forced \
+            --verbose \
             --output ./efbundle
 
       - name: Upload migration bundle
