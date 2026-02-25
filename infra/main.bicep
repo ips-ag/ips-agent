@@ -236,6 +236,7 @@ module sqlServer 'br/public:avm/res/sql/server:0.21.1' = {
         requestedBackupStorageRedundancy: env == 'prod' ? 'Geo' : 'Local'
         useFreeLimit: sqlUseFreeLimit
         freeLimitExhaustionBehavior: sqlUseFreeLimit ? 'AutoPause' : null
+        autoPauseDelay: sqlUseFreeLimit ? null : 60
         minCapacity: '0.5'
       }
     ]
