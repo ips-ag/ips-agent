@@ -96,6 +96,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<UserSyncMiddleware>();
 app.MapHealthChecks("/health").AllowAnonymous();
+app.MapGet("/", () => Results.Ok()).AllowAnonymous();
 app.MapControllers();
 
 app.Run();
