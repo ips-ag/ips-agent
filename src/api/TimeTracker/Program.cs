@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add OpenTelemetry with Azure Monitor (Application Insights)
 // Filter out successful requests to health/noise endpoints to reduce telemetry volume
-builder.Services.ConfigureOpenTelemetryTracerProvider((_, trace) => trace.AddProcessor<HealthRequestFilter>());
+builder.Services.ConfigureOpenTelemetryTracerProvider((_, trace) => trace.AddProcessor(new HealthRequestFilter()));
 builder.Services.AddOpenTelemetry().UseAzureMonitor();
 
 // Add authentication & authorization
