@@ -140,6 +140,7 @@ module appServicePlan 'br/public:avm/res/web/serverfarm:0.7.0' = {
     location: location
     tags: tags
     skuName: appServicePlanSku.name
+    skuCapacity: 1
     reserved: true
     kind: 'Linux'
   }
