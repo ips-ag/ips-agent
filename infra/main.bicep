@@ -166,6 +166,12 @@ module apiApp 'br/public:avm/res/web/site:0.22.0' = {
       linuxFxVersion: 'DOTNETCORE|10.0'
       alwaysOn: true
       healthCheckPath: '/health'
+      cors: {
+        allowedOrigins: [
+          'https://${webAppName}.azurewebsites.net'
+        ]
+        supportCredentials: true
+      }
       appSettings: [
         {
           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
