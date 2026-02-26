@@ -1,0 +1,93 @@
+name: Deploy App
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        type: string
+        default: Dev
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        type: choice
+        options:
+          - Dev
+          - Test
+          - Prod
+        default: Dev
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build:
+    name: Build App
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: src/app/package-lock.json
+
+      - name: Set lowercase environment name
+        run: echo "ENVIRONMENT_LOWER=$(echo '${{ inputs.environment }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        working-directory: src/app
+        run: npm ci
+
+      - name: Build
+        working-directory: src/app
+        env:
+          VITE_AUTH_CLIENT_ID: ${{ secrets.AUTH_CLIENT_ID }}
+          VITE_AUTH_TENANT_ID: ${{ secrets.AUTH_TENANT_ID }}
+          VITE_API_URL: https://app-ipsagent-api-${{ env.ENVIRONMENT_LOWER }}.azurewebsites.net
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-artifact
+          path: src/app/dist
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy (${{ inputs.environment }})
+    needs: build
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    env:
+      ENVIRONMENT: ${{ inputs.environment }}
+    steps:
+      - name: Set lowercase environment name
+        run: echo "ENVIRONMENT_LOWER=$(echo '${{ env.ENVIRONMENT }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-artifact
+          path: ./dist
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: app-ipsagent-app-${{ env.ENVIRONMENT_LOWER }}
+          package: ./dist

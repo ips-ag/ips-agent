@@ -1,0 +1,66 @@
+name: Deploy Infrastructure
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        type: string
+        default: Dev
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        type: choice
+        options:
+          - Dev
+          - Test
+          - Prod
+        default: Dev
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  lint:
+    name: Lint Bicep
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Lint Bicep template
+        run: az bicep lint --file infra/main.bicep
+
+  deploy:
+    name: Deploy (${{ inputs.environment }})
+    needs: lint
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    env:
+      ENVIRONMENT: ${{ inputs.environment }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy infrastructure
+        run: |
+          az deployment sub create \
+            --location swedencentral \
+            --template-file infra/main.bicep \
+            --parameters infra/environments/${{ env.ENVIRONMENT }}.bicepparam \
+            --parameters \
+              sqlAdminLogin="${{ secrets.SQL_ADMIN_LOGIN }}" \
+              sqlAdminPassword="${{ secrets.SQL_ADMIN_PASSWORD }}" \
+              entraIdTenantId="${{ secrets.AUTH_TENANT_ID }}" \
+              entraIdClientId="${{ secrets.AUTH_CLIENT_ID }}"

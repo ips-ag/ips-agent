@@ -1,0 +1,23 @@
+name: Deploy API (Dev)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - src/api/**
+      - .github/workflows/api.yml
+      - .github/workflows/api_dev.yml
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-dev:
+    name: Deploy API to Dev
+    uses: ./.github/workflows/api.yml
+    with:
+      environment: Dev
+    secrets: inherit
