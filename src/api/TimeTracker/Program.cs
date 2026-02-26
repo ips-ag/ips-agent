@@ -1,15 +1,19 @@
 using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Trace;
 using TimeTracker.Application;
 using TimeTracker.Application.Common.Interfaces;
 using TimeTracker.Infrastructure;
 using TimeTracker.Infrastructure.Services;
 using TimeTracker.Middleware;
+using TimeTracker.Telemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add OpenTelemetry with Azure Monitor (Application Insights)
+// Filter out successful requests to health/noise endpoints to reduce telemetry volume
+builder.Services.ConfigureOpenTelemetryTracerProvider((_, trace) => trace.AddProcessor<HealthRequestFilter>());
 builder.Services.AddOpenTelemetry().UseAzureMonitor();
 
 // Add authentication & authorization
