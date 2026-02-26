@@ -9,20 +9,13 @@ namespace TimeTracker.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, bool isDevelopment = true)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection") ?? "Data Source=timetracker.db";
+        string connectionString = configuration.GetConnectionString("DefaultConnection") ??
+            throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-        if (isDevelopment)
-        {
-            services.AddDbContext<TimeTrackerDbContext>(options =>
-                options.UseSqlite(connectionString));
-        }
-        else
-        {
-            services.AddDbContext<TimeTrackerDbContext>(options =>
-                options.UseSqlServer(connectionString));
-        }
+        services.AddDbContext<TimeTrackerDbContext>(options =>
+            options.UseSqlServer(connectionString));
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<TimeTrackerDbContext>());
         services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));

@@ -18,37 +18,44 @@ builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 // Add services
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration, builder.Environment.IsDevelopment());
+builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-    {
-        Type = SecuritySchemeType.OAuth2,
-        Flows = new OpenApiOAuthFlows
+    options.AddSecurityDefinition(
+        "oauth2",
+        new OpenApiSecurityScheme
         {
-            AuthorizationCode = new OpenApiOAuthFlow
+            Type = SecuritySchemeType.OAuth2,
+            Flows = new OpenApiOAuthFlows
             {
-                AuthorizationUrl = new Uri($"{builder.Configuration["AzureAd:Instance"]}{builder.Configuration["AzureAd:TenantId"]}/oauth2/v2.0/authorize"),
-                TokenUrl = new Uri($"{builder.Configuration["AzureAd:Instance"]}{builder.Configuration["AzureAd:TenantId"]}/oauth2/v2.0/token"),
-                Scopes = new Dictionary<string, string>
+                AuthorizationCode = new OpenApiOAuthFlow
                 {
-                    { $"{builder.Configuration["AzureAd:Audience"]}/FakeIntra", "Access FakeIntra API" }
+                    AuthorizationUrl =
+                        new Uri(
+                            $"{builder.Configuration["AzureAd:Instance"]}{builder.Configuration["AzureAd:TenantId"]}/oauth2/v2.0/authorize"),
+                    TokenUrl =
+                        new Uri(
+                            $"{builder.Configuration["AzureAd:Instance"]}{builder.Configuration["AzureAd:TenantId"]}/oauth2/v2.0/token"),
+                    Scopes = new Dictionary<string, string>
+                    {
+                        { $"{builder.Configuration["AzureAd:Audience"]}/FakeIntra", "Access FakeIntra API" }
+                    }
                 }
             }
-        }
-    });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
+        });
+    options.AddSecurityRequirement(
+        new OpenApiSecurityRequirement
         {
-            new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
-            },
-            new[] { $"{builder.Configuration["AzureAd:Audience"]}/FakeIntra" }
-        }
-    });
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
+                },
+                [$"{builder.Configuration["AzureAd:Audience"]}/FakeIntra"]
+            }
+        });
 });
 
 // CORS for React dev server
