@@ -62,6 +62,9 @@ builder.Services.AddSwaggerGen(options =>
         });
 });
 
+// Health checks
+builder.Services.AddHealthChecks();
+
 // CORS for React dev server
 builder.Services.AddCors(options =>
 {
@@ -92,6 +95,7 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<UserSyncMiddleware>();
+app.MapHealthChecks("/health").AllowAnonymous();
 app.MapControllers();
 
 app.Run();
