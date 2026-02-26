@@ -1,3 +1,4 @@
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using TimeTracker.Application;
@@ -7,6 +8,9 @@ using TimeTracker.Infrastructure.Services;
 using TimeTracker.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add OpenTelemetry with Azure Monitor (Application Insights)
+builder.Services.AddOpenTelemetry().UseAzureMonitor();
 
 // Add authentication & authorization
 builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration);
