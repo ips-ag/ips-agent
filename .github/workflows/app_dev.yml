@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/fake-intra
     paths:
       - src/app/**
       - .github/workflows/app.yml
