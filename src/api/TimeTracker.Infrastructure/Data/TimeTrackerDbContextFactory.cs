@@ -9,7 +9,8 @@ public class TimeTrackerDbContextFactory : IDesignTimeDbContextFactory<TimeTrack
     {
         var optionsBuilder = new DbContextOptionsBuilder<TimeTrackerDbContext>();
         optionsBuilder.UseSqlServer(
-            "Server=localhost,1433;Database=TimeTracker;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True");
+            "Server=localhost,1433;Database=TimeTracker;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True",
+            options => options.EnableRetryOnFailure());
         return new TimeTrackerDbContext(optionsBuilder.Options);
     }
 }
