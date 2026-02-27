@@ -1,6 +1,9 @@
 using Azure.Monitor.OpenTelemetry.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
+using ModelContextProtocol.AspNetCore.Authentication;
+using ModelContextProtocol.Authentication;
 using OpenTelemetry.Trace;
 using TimeTracker.Application;
 using TimeTracker.Application.Common.Interfaces;
@@ -11,20 +14,30 @@ using TimeTracker.Telemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add OpenTelemetry with Azure Monitor (Application Insights)
-// Filter out successful requests to health/noise endpoints to reduce telemetry volume
 builder.Services.ConfigureOpenTelemetryTracerProvider((_, trace) => trace.AddProcessor(new HealthRequestFilter()));
 builder.Services.AddOpenTelemetry().UseAzureMonitor();
 
-// Add authentication & authorization
-builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration);
+string entraInstance = builder.Configuration["AzureAd:Instance"]!.TrimEnd('/');
+string entraTenantId = builder.Configuration["AzureAd:TenantId"]!;
+string entraAudience = builder.Configuration["AzureAd:Audience"]!;
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultChallengeScheme = McpAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddMcp(options =>
+{
+    options.ResourceMetadata = new ProtectedResourceMetadata
+    {
+        AuthorizationServers = { $"{entraInstance}/{entraTenantId}/v2.0" },
+        ScopesSupported = [$"api://{entraAudience}/FakeIntra"]
+    };
+}).AddMicrosoftIdentityWebApi(builder.Configuration);
 builder.Services.AddAuthorization();
 
-// Current user service (reads claims from HttpContext)
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-// Add services
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
@@ -66,6 +79,12 @@ builder.Services.AddSwaggerGen(options =>
         });
 });
 
+// MCP server
+builder.Services
+    .AddMcpServer()
+    .WithHttpTransport()
+    .WithToolsFromAssembly();
+
 // Health checks
 builder.Services.AddHealthChecks();
 
@@ -103,5 +122,6 @@ app.MapHealthChecks("/health").AllowAnonymous();
 app.MapGet("/", () => Results.Ok()).AllowAnonymous();
 app.MapGet("/robots933456.txt", () => Results.Ok()).AllowAnonymous();
 app.MapControllers();
+app.MapMcp("/mcp").RequireAuthorization();
 
 app.Run();

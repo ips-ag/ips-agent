@@ -26,7 +26,9 @@ param(
     "http://localhost:5173/",
     "http://localhost:5108/",
     "http://localhost:5108/swagger/oauth2-redirect.html",
-    "https://app-ipsagent-app-dev.azurewebsites.net/"
+    "https://app-ipsagent-app-dev.azurewebsites.net/",
+    "http://127.0.0.1:33418",
+    "https://vscode.dev/redirect"
   ),
 
   [Parameter(Mandatory = $false)]

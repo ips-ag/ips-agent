@@ -56,8 +56,8 @@ Six tools are exposed — five read-only lookups plus one write operation. Each 
 |-------|-------|
 | **Description** | Returns all active tasks under a specific project. Time entries are logged against tasks (not projects), so this tool is essential to resolve the correct `taskId` before creating a time entry. Each task includes its ID, name, code, description, and active date range. |
 | **Parameters** | `projectId` (string, required) — the project ID obtained from `get_my_projects` |
-| **Returns** | `List<TaskDto>` — tasks belonging to the specified project |
-| **MediatR Query** | `GetTasksByProjectQuery(projectId)` |
+| **Returns** | `PagedList<TaskDto>` — tasks belonging to the specified project |
+| **MediatR Query** | `GetTasksQuery(Page: 1, PageSize: 100, ProjectId: projectId)` |
 | **Auth** | Required |
 
 ### 3.3 `get_my_timesheet`
@@ -109,7 +109,7 @@ Six tools are exposed — five read-only lookups plus one write operation. Each 
 Add to `TimeTracker.csproj`:
 
 ```xml
-<PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.*" />
+<PackageReference Include="ModelContextProtocol.AspNetCore" Version="1.*" />
 ```
 
 ### 4.2 MCP Server Registration
@@ -119,7 +119,7 @@ In `Program.cs`, register the MCP server before `var app = builder.Build()`:
 ```csharp
 builder.Services
     .AddMcpServer()
-    .WithStreamableHttpTransport()
+    .WithHttpTransport()
     .WithToolsFromAssembly();
 ```
 
