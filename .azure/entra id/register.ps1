@@ -7,7 +7,7 @@
     including SPA authentication, API scopes, permissions, and optional claims.
 .NOTES
     Prerequisites:
-    - Azure CLI installed and logged in (az login)
+    - Azure PowerShell module installed (Install-Module Az)
     - Appropriate permissions to create Entra ID applications
 #>
 
@@ -16,7 +16,7 @@ param(
   [string]$DisplayName = "app-fakeintra-dev",
     
   [Parameter(Mandatory = $false)]
-  [string]$HomePageUrl = "https://app-fakeintra-ui-dev.azurewebsites.net/",
+  [string]$HomePageUrl = "https://app-ipsagent-app-dev.azurewebsites.net/",
     
   [Parameter(Mandatory = $false)]
   [string]$ApplicationName = "FakeIntra",
@@ -39,6 +39,10 @@ $ErrorActionPreference = "Stop"
 # Import required modules
 Import-Module Az.Resources
 
+# Connect to Azure - ensures correct tenant/user context for all subsequent commands
+Connect-AzAccount
+Write-Host ""
+
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "Entra ID Application Registration" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
@@ -46,10 +50,10 @@ Write-Host ""
 
 # Get tenant information
 Write-Host "Getting tenant information..." -ForegroundColor Yellow
-$tenantInfo = az account show | ConvertFrom-Json
-$tenantId = $tenantInfo.tenantId
-$tenantName = $tenantInfo.tenantDisplayName
-$userName = $tenantInfo.user.name
+$context = Get-AzContext
+$tenantId = $context.Tenant.Id
+$tenantName = (Get-AzTenant -TenantId $tenantId).Name
+$userName = $context.Account.Id
 
 Write-Host "Tenant ID: $tenantId" -ForegroundColor Green
 Write-Host "Tenant Name: $tenantName" -ForegroundColor Green
@@ -58,27 +62,27 @@ Write-Host ""
 
 # Step 1: Check if application exists, create if not
 Write-Host "Step 1: Checking if application exists..." -ForegroundColor Yellow
-$existingApp = az ad app list --display-name $DisplayName --query "[0]" | ConvertFrom-Json
+$existingApp = Get-AzADApplication -DisplayName $DisplayName | Select-Object -First 1
 
 if ($existingApp) {
   Write-Host "Application '$DisplayName' already exists!" -ForegroundColor Yellow
-  $appObjectId = $existingApp.id
-  $appId = $existingApp.appId
+  $appObjectId = $existingApp.Id
+  $appId = $existingApp.AppId
   Write-Host "  Object ID: $appObjectId" -ForegroundColor Green
   Write-Host "  App ID (Client ID): $appId" -ForegroundColor Green
   Write-Host "  Skipping creation, will proceed with configuration..." -ForegroundColor Yellow
 }
 else {
   Write-Host "Application not found. Creating new application..." -ForegroundColor Yellow
-  $appJson = az ad app create `
-    --display-name $DisplayName `
-    --enable-access-token-issuance true `
-    --enable-id-token-issuance true `
-    --sign-in-audience AzureADMyOrg `
-    --web-home-page-url $HomePageUrl | ConvertFrom-Json
+  $newApp = New-AzADApplication `
+    -DisplayName $DisplayName `
+    -EnableAccessTokenIssuance `
+    -EnableIdTokenIssuance `
+    -SignInAudience AzureADMyOrg `
+    -WebHomePageUrl $HomePageUrl
 
-  $appObjectId = $appJson.id
-  $appId = $appJson.appId
+  $appObjectId = $newApp.Id
+  $appId = $newApp.AppId
 
   Write-Host "Application created successfully!" -ForegroundColor Green
   Write-Host "  Object ID: $appObjectId" -ForegroundColor Green
