@@ -6,7 +6,10 @@ export function useAuth() {
   const account = useAccount(accounts[0] ?? {});
 
   const login = () => instance.loginRedirect(loginRequest);
-  const logout = () => instance.logoutRedirect();
+  const logout = () => instance.logoutRedirect({
+    account: accounts[0],
+    onRedirectNavigate: () => false,
+  });
 
   const getAccessToken = async (): Promise<string> => {
     if (!account) throw new Error('No account');
