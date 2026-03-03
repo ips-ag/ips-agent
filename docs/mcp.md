@@ -114,13 +114,30 @@ Add to `TimeTracker.csproj`:
 
 ### 4.2 MCP Server Registration
 
-In `Program.cs`, register the MCP server before `var app = builder.Build()`:
+In `Program.cs`, configure authentication to use the MCP challenge scheme (enables OAuth resource metadata discovery for MCP clients) and register the MCP server:
 
 ```csharp
-builder.Services
-    .AddMcpServer()
-    .WithHttpTransport()
-    .WithToolsFromAssembly();
+builder.Services.ConfigureOptions<McpAuthenticationOptionsConfiguration>();
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultChallengeScheme = McpAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddMcp()
+    .AddMicrosoftIdentityWebApi(builder.Configuration);
+
+// MCP server
+builder.Services.AddMcpServer().AddAuthorizationFilters().WithHttpTransport().WithToolsFromAssembly();
+```
+
+`McpAuthenticationOptionsConfiguration` populates `ProtectedResourceMetadata` with the Entra authorization server URL and supported scope, allowing MCP clients to auto-discover the auth endpoint:
+
+```csharp
+options.ResourceMetadata = new ProtectedResourceMetadata
+{
+    AuthorizationServers = { new Uri(instance, $"{tenantId}/v2.0").ToString() },
+    ScopesSupported = [$"api://{clientId}/FakeIntra"]
+};
 ```
 
 After the existing middleware pipeline, map the MCP endpoint:
@@ -131,11 +148,12 @@ app.MapMcp("/mcp").RequireAuthorization();
 
 ### 4.3 Tool Implementation Pattern
 
-All tools are implemented in a single class using the `[McpServerTool]` attribute. Tools resolve `ISender` and `ICurrentUserService` from DI to dispatch existing MediatR requests.
+All tools are implemented in a single class using the `[McpServerTool]` attribute. Tools inject `ISender` to dispatch MediatR requests; tools that act on the current user's data also inject `ICurrentUserService`.
 
 ```
 src/api/TimeTracker/
 └── Mcp/
+    ├── McpAuthenticationOptionsConfiguration.cs
     └── TimeTrackerMcpTools.cs
 ```
 
@@ -145,8 +163,8 @@ Example tool skeleton:
 [McpServerToolType]
 public sealed class TimeTrackerMcpTools
 {
-    [McpServerTool(Name = "get_my_projects"),
-     Description("Returns all active projects assigned to the current user...")]
+    [McpServerTool(Name = "get_my_projects")]
+    [Description("Returns all active projects assigned to the current user...")]
     public async Task<List<ProjectDto>> GetMyProjects(
         ISender sender, ICurrentUserService currentUser, CancellationToken ct)
     {
@@ -154,8 +172,8 @@ public sealed class TimeTrackerMcpTools
         return await sender.Send(new GetProjectsByUserQuery(userId), ct);
     }
 
-    [McpServerTool(Name = "create_time_entry"),
-     Description("Creates a time entry for the current user...")]
+    [McpServerTool(Name = "create_time_entry")]
+    [Description("Creates a time entry for the current user...")]
     public async Task<string> CreateTimeEntry(
         ISender sender, ICurrentUserService currentUser,
         string taskId, string date, decimal hours, string description,
@@ -175,7 +193,7 @@ public sealed class TimeTrackerMcpTools
 Agent → HTTP POST /mcp (Bearer token) → ASP.NET Auth Middleware → UserSyncMiddleware → MCP Handler → MediatR
 ```
 
-The connecting agent must acquire an Entra ID token with the `api://<client-id>/FakeIntra` scope — the same OAuth2 flow used by the SPA. The MCP SDK's Streamable HTTP transport receives standard HTTP requests, so the existing middleware pipeline processes them without modification.
+The connecting agent must acquire an Entra ID token with the `api://<client-id>/FakeIntra` scope. Using `McpAuthenticationDefaults.AuthenticationScheme` as the default challenge scheme causes the server to advertise a `WWW-Authenticate: Bearer` header with a resource metadata URL, enabling MCP clients to perform the OAuth flow automatically.
 
 ### 4.5 Error Handling
 
