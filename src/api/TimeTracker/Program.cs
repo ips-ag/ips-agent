@@ -1,70 +1,43 @@
 using Azure.Monitor.OpenTelemetry.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
-using Microsoft.OpenApi.Models;
+using ModelContextProtocol.AspNetCore.Authentication;
 using OpenTelemetry.Trace;
 using TimeTracker.Application;
 using TimeTracker.Application.Common.Interfaces;
 using TimeTracker.Infrastructure;
 using TimeTracker.Infrastructure.Services;
+using TimeTracker.Mcp;
 using TimeTracker.Middleware;
+using TimeTracker.Swagger;
 using TimeTracker.Telemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add OpenTelemetry with Azure Monitor (Application Insights)
-// Filter out successful requests to health/noise endpoints to reduce telemetry volume
 builder.Services.ConfigureOpenTelemetryTracerProvider((_, trace) => trace.AddProcessor(new HealthRequestFilter()));
 builder.Services.AddOpenTelemetry().UseAzureMonitor();
-
-// Add authentication & authorization
-builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration);
+builder.Services.ConfigureOptions<McpAuthenticationOptionsConfiguration>();
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultChallengeScheme = McpAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddMcp()
+    .AddMicrosoftIdentityWebApi(builder.Configuration);
 builder.Services.AddAuthorization();
 
-// Current user service (reads claims from HttpContext)
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-// Add services
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.AddSecurityDefinition(
-        "oauth2",
-        new OpenApiSecurityScheme
-        {
-            Type = SecuritySchemeType.OAuth2,
-            Flows = new OpenApiOAuthFlows
-            {
-                AuthorizationCode = new OpenApiOAuthFlow
-                {
-                    AuthorizationUrl =
-                        new Uri(
-                            $"{builder.Configuration["AzureAd:Instance"]}{builder.Configuration["AzureAd:TenantId"]}/oauth2/v2.0/authorize"),
-                    TokenUrl =
-                        new Uri(
-                            $"{builder.Configuration["AzureAd:Instance"]}{builder.Configuration["AzureAd:TenantId"]}/oauth2/v2.0/token"),
-                    Scopes = new Dictionary<string, string>
-                    {
-                        { $"{builder.Configuration["AzureAd:Audience"]}/FakeIntra", "Access FakeIntra API" }
-                    }
-                }
-            }
-        });
-    options.AddSecurityRequirement(
-        new OpenApiSecurityRequirement
-        {
-            {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
-                },
-                [$"{builder.Configuration["AzureAd:Audience"]}/FakeIntra"]
-            }
-        });
-});
+builder.Services.ConfigureOptions<SwaggerGenOptionsConfiguration>();
+builder.Services.AddSwaggerGen();
+
+// MCP server
+builder.Services.AddMcpServer().AddAuthorizationFilters().WithHttpTransport().WithToolsFromAssembly();
 
 // Health checks
 builder.Services.AddHealthChecks();
@@ -103,5 +76,6 @@ app.MapHealthChecks("/health").AllowAnonymous();
 app.MapGet("/", () => Results.Ok()).AllowAnonymous();
 app.MapGet("/robots933456.txt", () => Results.Ok()).AllowAnonymous();
 app.MapControllers();
+app.MapMcp("/mcp").RequireAuthorization();
 
 app.Run();

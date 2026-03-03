@@ -24,26 +24,37 @@ public class UserSyncMiddleware
             if (sub is not null)
             {
                 var existing = await userRepo.Query().FirstOrDefaultAsync(u => u.ExternalId == sub);
-
                 if (existing is null)
                 {
                     string email = context.User.FindFirstValue(ClaimTypes.Email) ??
                         context.User.FindFirstValue("preferred_username") ?? string.Empty;
-                    var user = new User
+                    var existingByEmail = await userRepo.Query().FirstOrDefaultAsync(u => u.Email == email);
+                    if (existingByEmail is not null)
                     {
-                        Id = Guid.NewGuid().ToString(),
-                        ExternalId = sub,
-                        Email = email,
-                        FirstName =
-                            context.User.FindFirstValue(ClaimTypes.GivenName) ??
-                            context.User.FindFirstValue("given_name") ?? string.Empty,
-                        LastName = context.User.FindFirstValue(ClaimTypes.Surname) ??
-                            context.User.FindFirstValue("family_name") ?? string.Empty
-                    };
-                    await userRepo.AddAsync(user);
-                    await uow.SaveChangesAsync();
-
-                    _logger.LogInformation("Auto-provisioned new user {Email} (sub: {Sub})", email, sub);
+                        existingByEmail.ExternalId = sub;
+                        await uow.SaveChangesAsync();
+                        _logger.LogInformation(
+                            "Updated ExternalId for existing user {Email} (new sub: {Sub})",
+                            email,
+                            sub);
+                    }
+                    else
+                    {
+                        var user = new User
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            ExternalId = sub,
+                            Email = email,
+                            FirstName =
+                                context.User.FindFirstValue(ClaimTypes.GivenName) ??
+                                context.User.FindFirstValue("given_name") ?? string.Empty,
+                            LastName = context.User.FindFirstValue(ClaimTypes.Surname) ??
+                                context.User.FindFirstValue("family_name") ?? string.Empty
+                        };
+                        await userRepo.AddAsync(user);
+                        await uow.SaveChangesAsync();
+                        _logger.LogInformation("Auto-provisioned new user {Email} (sub: {Sub})", email, sub);
+                    }
                 }
             }
         }
