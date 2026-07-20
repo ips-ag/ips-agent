@@ -9,10 +9,10 @@ export const msalConfig: Configuration = {
     authority: `https://login.microsoftonline.com/${tenantId}`,
     redirectUri: '/',
     postLogoutRedirectUri: '/',
+    onRedirectNavigate: (url: string) => !url.includes('/logout'),
   },
   cache: {
     cacheLocation: 'sessionStorage',
-    storeAuthStateInCookie: false,
   },
   system: {
     loggerOptions: {

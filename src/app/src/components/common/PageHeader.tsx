@@ -10,7 +10,7 @@ interface PageHeaderProps {
 export default function PageHeader({ title, onAdd, addLabel }: PageHeaderProps) {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-      <Typography variant="h4" fontWeight={700}>{title}</Typography>
+      <Typography variant="h4" sx={{ fontWeight: 700 }}>{title}</Typography>
       {onAdd && (
         <Button variant="contained" startIcon={<AddIcon />} onClick={onAdd}>
           {addLabel ?? 'Add New'}

@@ -135,7 +135,7 @@ export default function TimesheetPage() {
                 return (
                   <TableRow key={row.taskId}>
                     <TableCell>
-                      <Typography variant="body2" fontWeight={600}>{row.taskName}</Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>{row.taskName}</Typography>
                       <Typography variant="caption" color="text.secondary">{row.projectName}</Typography>
                     </TableCell>
                     {row.days.map((h, i) => (
