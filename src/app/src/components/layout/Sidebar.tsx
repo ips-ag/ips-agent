@@ -35,7 +35,7 @@ export default function Sidebar({ drawerWidth, mobileOpen, onClose }: SidebarPro
   const drawerContent = (
     <Box>
       <Toolbar>
-        <Typography variant="h6" fontWeight={700} color="primary">
+        <Typography variant="h6" sx={{ fontWeight: 700 }} color="primary">
           Fake Intra
         </Typography>
       </Toolbar>

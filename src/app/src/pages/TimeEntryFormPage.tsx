@@ -137,14 +137,14 @@ export default function TimeEntryFormPage() {
               {...register('date')}
               error={!!errors.date}
               helperText={errors.date?.message}
-              InputLabelProps={{ shrink: true }}
+              slotProps={{ inputLabel: { shrink: true } }}
               fullWidth
             />
 
             <TextField
               label="Hours"
               type="number"
-              inputProps={{ step: 0.25, min: 0.25, max: 24 }}
+              slotProps={{ htmlInput: { step: 0.25, min: 0.25, max: 24 } }}
               {...register('hours')}
               error={!!errors.hours}
               helperText={errors.hours?.message}

@@ -274,14 +274,14 @@ export default function ProjectListPage() {
               label="Start Date"
               type="date"
               {...register('startDate')}
-              InputLabelProps={{ shrink: true }}
+              slotProps={{ inputLabel: { shrink: true } }}
               fullWidth
             />
             <TextField
               label="End Date"
               type="date"
               {...register('endDate')}
-              InputLabelProps={{ shrink: true }}
+              slotProps={{ inputLabel: { shrink: true } }}
               fullWidth
             />
           </DialogContent>

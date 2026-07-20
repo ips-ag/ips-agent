@@ -3,12 +3,9 @@ import {
   Paper, Table, TableHead, TableRow, TableCell, TableBody,
   Card, CardContent, Typography, Chip, Box, Button, Dialog,
   DialogTitle, DialogContent, DialogActions, TextField, FormControl,
-  InputLabel, Select, MenuItem, IconButton, Tooltip,
+  InputLabel, Select, MenuItem, IconButton, Tooltip, Tabs,
 } from '@mui/material';
 import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -94,18 +91,18 @@ export default function ProjectDetailPage() {
     <>
       <PageHeader title={project.name} />
 
-      <TabContext value={tab}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
-          <TabList onChange={(_: React.SyntheticEvent, v: string) => setTab(v)}>
-            <Tab label="Info" value="info" />
-            <Tab label="Child Projects" value="children" />
-            <Tab label="Tasks" value="tasks" />
-            <Tab label="Users" value="users" />
-          </TabList>
-        </Box>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+        <Tabs value={tab} onChange={(_: React.SyntheticEvent, v: string) => setTab(v)}>
+          <Tab label="Info" value="info" />
+          <Tab label="Child Projects" value="children" />
+          <Tab label="Tasks" value="tasks" />
+          <Tab label="Users" value="users" />
+        </Tabs>
+      </Box>
 
-        {/* Info Tab */}
-        <TabPanel value="info" sx={{ p: 0 }}>
+      {/* Info Tab */}
+      {tab === 'info' && (
+        <Box sx={{ pt: 2 }}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
@@ -144,10 +141,12 @@ export default function ProjectDetailPage() {
               </Box>
             </CardContent>
           </Card>
-        </TabPanel>
+        </Box>
+      )}
 
-        {/* Child Projects Tab */}
-        <TabPanel value="children" sx={{ p: 0 }}>
+      {/* Child Projects Tab */}
+      {tab === 'children' && (
+        <Box sx={{ pt: 2 }}>
           {childProjects.length === 0 ? (
             <EmptyState message="No child projects" />
           ) : (
@@ -183,10 +182,12 @@ export default function ProjectDetailPage() {
               </Table>
             </Paper>
           )}
-        </TabPanel>
+        </Box>
+      )}
 
-        {/* Tasks Tab */}
-        <TabPanel value="tasks" sx={{ p: 0 }}>
+      {/* Tasks Tab */}
+      {tab === 'tasks' && (
+        <Box sx={{ pt: 2 }}>
           <Box sx={{ mb: 2 }}>
             <Button variant="contained" onClick={() => { reset(); setTaskDialogOpen(true); }}>
               Add Task
@@ -227,10 +228,12 @@ export default function ProjectDetailPage() {
               </Table>
             </Paper>
           )}
-        </TabPanel>
+        </Box>
+      )}
 
-        {/* Users Tab */}
-        <TabPanel value="users" sx={{ p: 0 }}>
+      {/* Users Tab */}
+      {tab === 'users' && (
+        <Box sx={{ pt: 2 }}>
           <Box sx={{ mb: 2 }}>
             <Button variant="contained" startIcon={<PersonAddIcon />} onClick={() => setAssignDialogOpen(true)}>
               Assign User
@@ -272,8 +275,8 @@ export default function ProjectDetailPage() {
               </Table>
             </Paper>
           )}
-        </TabPanel>
-      </TabContext>
+        </Box>
+      )}
 
       <Box sx={{ mt: 2 }}>
         <Button variant="outlined" onClick={() => navigate('/projects')}>Back to Projects</Button>
@@ -287,8 +290,8 @@ export default function ProjectDetailPage() {
             <TextField label="Name" {...register('name')} error={!!errors.name} helperText={errors.name?.message} fullWidth />
             <TextField label="Code" {...register('code')} error={!!errors.code} helperText={errors.code?.message} fullWidth />
             <TextField label="Description" {...register('description')} multiline rows={2} fullWidth />
-            <TextField label="Start Date" type="date" {...register('startDate')} InputLabelProps={{ shrink: true }} fullWidth />
-            <TextField label="End Date" type="date" {...register('endDate')} InputLabelProps={{ shrink: true }} fullWidth />
+            <TextField label="Start Date" type="date" {...register('startDate')} slotProps={{ inputLabel: { shrink: true } }} fullWidth />
+            <TextField label="End Date" type="date" {...register('endDate')} slotProps={{ inputLabel: { shrink: true } }} fullWidth />
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setTaskDialogOpen(false)}>Cancel</Button>

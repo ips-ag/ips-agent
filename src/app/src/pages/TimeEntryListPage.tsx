@@ -62,7 +62,7 @@ export default function TimeEntryListPage() {
           type="date"
           value={dateFrom}
           onChange={(e) => updateParam('dateFrom', e.target.value)}
-          InputLabelProps={{ shrink: true }}
+          slotProps={{ inputLabel: { shrink: true } }}
         />
         <TextField
           size="small"
@@ -70,7 +70,7 @@ export default function TimeEntryListPage() {
           type="date"
           value={dateTo}
           onChange={(e) => updateParam('dateTo', e.target.value)}
-          InputLabelProps={{ shrink: true }}
+          slotProps={{ inputLabel: { shrink: true } }}
         />
         <FormControl size="small" sx={{ minWidth: 200 }}>
           <InputLabel>Filter by User</InputLabel>
