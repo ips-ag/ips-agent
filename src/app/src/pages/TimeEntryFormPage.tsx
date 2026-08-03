@@ -23,6 +23,7 @@ const timeEntrySchema = z.object({
     .max(24, 'Maximum 24 hours'),
   description: z.string().optional(),
 });
+type TimeEntryFormInput = z.input<typeof timeEntrySchema>;
 type TimeEntryFormData = z.infer<typeof timeEntrySchema>;
 
 export default function TimeEntryFormPage() {
@@ -35,7 +36,7 @@ export default function TimeEntryFormPage() {
   const updateEntry = useUpdateTimeEntry();
   const { data: projects } = useProjects(1, 100);
 
-  const { register, handleSubmit, control, watch, reset, setValue, formState: { errors } } = useForm<TimeEntryFormData>({
+  const { register, handleSubmit, control, watch, reset, setValue, formState: { errors } } = useForm<TimeEntryFormInput, any, TimeEntryFormData>({
     resolver: zodResolver(timeEntrySchema),
     defaultValues: { projectId: '', taskId: '', date: '', hours: 0, description: '' },
   });
