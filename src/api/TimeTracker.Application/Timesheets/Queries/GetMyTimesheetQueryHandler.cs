@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TimeTracker.Application.DTOs;
@@ -10,12 +9,10 @@ namespace TimeTracker.Application.Timesheets.Queries;
 public class GetMyTimesheetQueryHandler : IRequestHandler<GetMyTimesheetQuery, TimesheetDto>
 {
     private readonly IRepository<TimeEntry> _repository;
-    private readonly IMapper _mapper;
 
-    public GetMyTimesheetQueryHandler(IRepository<TimeEntry> repository, IMapper mapper)
+    public GetMyTimesheetQueryHandler(IRepository<TimeEntry> repository)
     {
         _repository = repository;
-        _mapper = mapper;
     }
 
     public async Task<TimesheetDto> Handle(GetMyTimesheetQuery request, CancellationToken ct)
@@ -32,7 +29,7 @@ public class GetMyTimesheetQueryHandler : IRequestHandler<GetMyTimesheetQuery, T
             .OrderBy(te => te.Date)
             .ToListAsync(ct);
 
-        var entryDtos = _mapper.Map<List<TimeEntryDto>>(entries);
+        var entryDtos = entries.Select(TimeEntryDto.FromEntity).ToList();
 
         return new TimesheetDto
         {

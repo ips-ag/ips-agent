@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TimeTracker.Application.Common.Exceptions;
@@ -11,12 +10,10 @@ namespace TimeTracker.Application.Projects.Queries;
 public class GetProjectHierarchyQueryHandler : IRequestHandler<GetProjectHierarchyQuery, ProjectDto>
 {
     private readonly IRepository<Project> _repository;
-    private readonly IMapper _mapper;
 
-    public GetProjectHierarchyQueryHandler(IRepository<Project> repository, IMapper mapper)
+    public GetProjectHierarchyQueryHandler(IRepository<Project> repository)
     {
         _repository = repository;
-        _mapper = mapper;
     }
 
     public async Task<ProjectDto> Handle(GetProjectHierarchyQuery request, CancellationToken ct)
@@ -26,7 +23,7 @@ public class GetProjectHierarchyQueryHandler : IRequestHandler<GetProjectHierarc
             .FirstOrDefaultAsync(p => p.Id == request.Id, ct)
             ?? throw new NotFoundException(nameof(Project), request.Id);
 
-        var dto = _mapper.Map<ProjectDto>(entity);
+        var dto = ProjectDto.FromEntity(entity);
         dto.Children = await LoadChildrenAsync(request.Id, ct);
         return dto;
     }
@@ -42,7 +39,7 @@ public class GetProjectHierarchyQueryHandler : IRequestHandler<GetProjectHierarc
         var result = new List<ProjectDto>();
         foreach (var child in children)
         {
-            var childDto = _mapper.Map<ProjectDto>(child);
+            var childDto = ProjectDto.FromEntity(child);
             childDto.Children = await LoadChildrenAsync(child.Id, ct);
             result.Add(childDto);
         }
