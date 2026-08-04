@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TimeTracker.Application.DTOs;
@@ -10,12 +9,10 @@ namespace TimeTracker.Application.Assignments.Queries;
 public class GetProjectsByUserQueryHandler : IRequestHandler<GetProjectsByUserQuery, List<ProjectDto>>
 {
     private readonly IRepository<ProjectUser> _projectUserRepository;
-    private readonly IMapper _mapper;
 
-    public GetProjectsByUserQueryHandler(IRepository<ProjectUser> projectUserRepository, IMapper mapper)
+    public GetProjectsByUserQueryHandler(IRepository<ProjectUser> projectUserRepository)
     {
         _projectUserRepository = projectUserRepository;
-        _mapper = mapper;
     }
 
     public async Task<List<ProjectDto>> Handle(GetProjectsByUserQuery request, CancellationToken ct)
@@ -28,6 +25,6 @@ public class GetProjectsByUserQueryHandler : IRequestHandler<GetProjectsByUserQu
             .OrderBy(p => p.Name)
             .ToListAsync(ct);
 
-        return _mapper.Map<List<ProjectDto>>(projects);
+        return projects.Select(ProjectDto.FromEntity).ToList();
     }
 }

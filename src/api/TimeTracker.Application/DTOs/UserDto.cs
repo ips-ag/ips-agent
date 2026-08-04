@@ -1,10 +1,9 @@
-using AutoMapper;
-using TimeTracker.Application.Common.Mappings;
+using System.Linq.Expressions;
 using TimeTracker.Domain.Entities;
 
 namespace TimeTracker.Application.DTOs;
 
-public class UserDto : IMapFrom<User>
+public class UserDto
 {
     public string Id { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
@@ -15,9 +14,19 @@ public class UserDto : IMapFrom<User>
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 
-    public void Mapping(Profile profile)
+    internal static Expression<Func<User, UserDto>> Projection { get; } = u => new UserDto
     {
-        profile.CreateMap<User, UserDto>()
-            .ForMember(d => d.Role, opt => opt.MapFrom(s => s.Role.ToString()));
-    }
+        Id = u.Id,
+        Email = u.Email,
+        FirstName = u.FirstName,
+        LastName = u.LastName,
+        Role = u.Role.ToString(),
+        IsActive = u.IsActive,
+        CreatedAt = u.CreatedAt,
+        UpdatedAt = u.UpdatedAt
+    };
+
+    private static readonly Func<User, UserDto> s_compiled = Projection.Compile();
+
+    internal static UserDto FromEntity(User u) => s_compiled(u);
 }

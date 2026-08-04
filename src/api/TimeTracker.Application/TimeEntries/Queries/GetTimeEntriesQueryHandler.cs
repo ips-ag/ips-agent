@@ -1,5 +1,3 @@
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TimeTracker.Application.Common.Models;
@@ -12,12 +10,10 @@ namespace TimeTracker.Application.TimeEntries.Queries;
 public class GetTimeEntriesQueryHandler : IRequestHandler<GetTimeEntriesQuery, PagedList<TimeEntryDto>>
 {
     private readonly IRepository<TimeEntry> _repository;
-    private readonly IMapper _mapper;
 
-    public GetTimeEntriesQueryHandler(IRepository<TimeEntry> repository, IMapper mapper)
+    public GetTimeEntriesQueryHandler(IRepository<TimeEntry> repository)
     {
         _repository = repository;
-        _mapper = mapper;
     }
 
     public async Task<PagedList<TimeEntryDto>> Handle(GetTimeEntriesQuery request, CancellationToken ct)
@@ -55,7 +51,7 @@ public class GetTimeEntriesQueryHandler : IRequestHandler<GetTimeEntriesQuery, P
         var items = await query
             .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)
-            .ProjectTo<TimeEntryDto>(_mapper.ConfigurationProvider)
+            .Select(TimeEntryDto.Projection)
             .ToListAsync(ct);
 
         return new PagedList<TimeEntryDto>(items, totalCount, request.Page, request.PageSize);

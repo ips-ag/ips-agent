@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TimeTracker.Application.Common.Exceptions;
@@ -11,12 +10,10 @@ namespace TimeTracker.Application.Customers.Queries;
 public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery, CustomerDto>
 {
     private readonly IRepository<Customer> _repository;
-    private readonly IMapper _mapper;
 
-    public GetCustomerByIdQueryHandler(IRepository<Customer> repository, IMapper mapper)
+    public GetCustomerByIdQueryHandler(IRepository<Customer> repository)
     {
         _repository = repository;
-        _mapper = mapper;
     }
 
     public async Task<CustomerDto> Handle(GetCustomerByIdQuery request, CancellationToken ct)
@@ -26,6 +23,6 @@ public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByIdQuery,
             .FirstOrDefaultAsync(c => c.Id == request.Id, ct)
             ?? throw new NotFoundException(nameof(Customer), request.Id);
 
-        return _mapper.Map<CustomerDto>(entity);
+        return CustomerDto.FromEntity(entity);
     }
 }

@@ -869,7 +869,6 @@ src/app/
 <PackageReference Include="MediatR" Version="12.5.0" />
 <PackageReference Include="FluentValidation" Version="11.*" />
 <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.*" />
-<PackageReference Include="AutoMapper" Version="13.*" />
 ```
 
 ### TimeTracker.Infrastructure

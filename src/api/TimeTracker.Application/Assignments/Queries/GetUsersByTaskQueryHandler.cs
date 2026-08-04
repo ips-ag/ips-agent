@@ -1,4 +1,3 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TimeTracker.Application.DTOs;
@@ -10,12 +9,10 @@ namespace TimeTracker.Application.Assignments.Queries;
 public class GetUsersByTaskQueryHandler : IRequestHandler<GetUsersByTaskQuery, List<UserDto>>
 {
     private readonly IRepository<TaskUser> _taskUserRepository;
-    private readonly IMapper _mapper;
 
-    public GetUsersByTaskQueryHandler(IRepository<TaskUser> taskUserRepository, IMapper mapper)
+    public GetUsersByTaskQueryHandler(IRepository<TaskUser> taskUserRepository)
     {
         _taskUserRepository = taskUserRepository;
-        _mapper = mapper;
     }
 
     public async Task<List<UserDto>> Handle(GetUsersByTaskQuery request, CancellationToken ct)
@@ -28,6 +25,6 @@ public class GetUsersByTaskQueryHandler : IRequestHandler<GetUsersByTaskQuery, L
             .ThenBy(u => u.FirstName)
             .ToListAsync(ct);
 
-        return _mapper.Map<List<UserDto>>(users);
+        return users.Select(UserDto.FromEntity).ToList();
     }
 }
