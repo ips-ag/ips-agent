@@ -221,7 +221,7 @@ module webApp 'br/public:avm/res/web/site:0.22.0' = {
 // 7. Azure SQL Server with Database
 // ─────────────────────────────────────────────────────────────────
 
-module sqlServer 'br/public:avm/res/sql/server:0.21.1' = {
+module sqlServer 'br/public:avm/res/sql/server:0.22.0' = {
   name: '${sqlServerName}-deployment'
   scope: resourceGroup(resourceGroupName)
   params: {
