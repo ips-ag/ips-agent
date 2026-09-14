@@ -248,7 +248,7 @@ Both App Services have **system-assigned managed identity** enabled. This identi
 | Runtime stack | `DOTNETCORE\|10.0` |
 | OS | Linux |
 | HTTPS only | `true` |
-| Always On | `false` (dev — Free plan does not support Always On), `true` (test, prod) |
+| Always On | `false` (dev), `true` (test, prod) |
 | Health check path | `/health` |
 | Managed identity | System-assigned |
 
