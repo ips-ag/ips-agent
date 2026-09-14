@@ -3,8 +3,8 @@ using '../main.bicep'
 param env = 'dev'
 
 param appServicePlanSku = {
-  name: 'B1'
-  tier: 'Basic'
+  name: 'F1'
+  tier: 'Free'
 }
 
 // Dev uses the Azure SQL Free serverless offer
