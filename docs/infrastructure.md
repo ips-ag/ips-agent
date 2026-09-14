@@ -156,8 +156,8 @@ param env = 'dev'
 param location = 'swedencentral'
 
 param appServicePlanSku = {
-  name: 'B1'
-  tier: 'Basic'
+  name: 'F1'
+  tier: 'Free'
 }
 
 // Dev uses the Azure SQL Free serverless offer — sqlDatabaseSku is ignored
@@ -248,7 +248,7 @@ Both App Services have **system-assigned managed identity** enabled. This identi
 | Runtime stack | `DOTNETCORE\|10.0` |
 | OS | Linux |
 | HTTPS only | `true` |
-| Always On | `true` (dev, test, prod) |
+| Always On | `false` (dev), `true` (test, prod) |
 | Health check path | `/health` |
 | Managed identity | System-assigned |
 

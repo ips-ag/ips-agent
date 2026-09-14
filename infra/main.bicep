@@ -83,6 +83,7 @@ var apiAppName = 'app-ipsagent-api-${env}'
 var webAppName = 'app-ipsagent-app-${env}'
 var sqlServerName = 'sql-ipsagent-${env}'
 var sqlDatabaseName = 'sqldb-ipsagent-${env}'
+var isFreeAppServicePlan = appServicePlanSku.tier == 'Free'
 
 // ─────────────────────────────────────────────────────────────────
 // 1. Resource Group (subscription scope)
@@ -165,7 +166,7 @@ module apiApp 'br/public:avm/res/web/site:0.22.0' = {
     }
     siteConfig: {
       linuxFxVersion: 'DOTNETCORE|10.0'
-      alwaysOn: true
+      alwaysOn: !isFreeAppServicePlan
       healthCheckPath: '/health'
       cors: {
         allowedOrigins: [
